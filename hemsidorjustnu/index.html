@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Melvin Viklund bygger snygga, snabba och mobilvänliga hemsidor åt småföretag i Vaxholm, Åkersberga och Roslagen. Gratis förslag först.">
+<meta property="og:title" content="Hemsidor Just Nu – hemsidor åt småföretag">
+<meta property="og:description" content="Snygga och mobilvänliga hemsidor åt småföretag i Vaxholm, Åkersberga och Roslagen. Gratis förslag först, från 2 995 kr.">
+<meta property="og:type" content="website">
+<style>img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Hemsidor Just Nu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,700&family=DM+Sans:wght@400;500;700&display=swap">
+<style>
+  :root{
+    --bg:#f7f3ec; --surface:#ffffff; --ink:#1d2421; --muted:#4a5450; --line:#e4ddd1;
+    --accent:#2f7a66; --accent-ink:#245e4f; --accent-soft:#dcece5; --warm:#f3d9c8; --on-accent:#ffffff;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#121714; --surface:#1b221e; --ink:#eef2ef; --muted:#a9b5af; --line:#2c3631;
+      --accent:#5cb89c; --accent-ink:#86d1b9; --accent-soft:#1d3a31; --warm:#3a2a20; --on-accent:#0f1a16;
+      color-scheme:dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#121714; --surface:#1b221e; --ink:#eef2ef; --muted:#a9b5af; --line:#2c3631;
+    --accent:#5cb89c; --accent-ink:#86d1b9; --accent-soft:#1d3a31; --warm:#3a2a20; --on-accent:#0f1a16;
+    color-scheme:dark;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 "DM Sans",system-ui,sans-serif;padding-inline:16px;overflow-x:hidden}
+  h1,h2,h3{font-family:Fraunces,Georgia,serif;margin:0;text-wrap:balance;letter-spacing:-.02em}
+  .wrap{max-width:880px;margin:0 auto;padding-block:32px 72px;display:grid;gap:72px}
+
+  header{position:relative;display:grid;gap:22px}
+  header::before{content:"";position:absolute;width:420px;height:420px;border-radius:50%;background:var(--accent-soft);right:-200px;top:-160px;z-index:-1}
+  header::after{content:"";position:absolute;width:260px;height:260px;border-radius:50%;background:var(--warm);left:-150px;bottom:-60px;z-index:-1;opacity:.7}
+  .handle{display:flex;align-items:center;gap:12px;font-weight:700}
+  .logo{width:42px;height:42px;border-radius:12px;background:var(--accent);display:grid;place-items:center;color:var(--on-accent)}
+  h1{font-size:clamp(2.4rem,7vw,4.2rem);line-height:1.02}
+  h1 em{color:var(--accent);font-style:italic}
+  .lead{font-size:clamp(1.1rem,2.4vw,1.3rem);color:var(--muted);max-width:40ch;margin:0}
+  .badges{display:flex;flex-wrap:wrap;gap:10px}
+  .badge{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:999px;background:var(--surface);border:1px solid var(--line);font-weight:500;font-size:.95rem}
+  .badge svg{color:var(--accent);flex-shrink:0}
+
+  h2{font-size:clamp(1.7rem,4vw,2.3rem);margin-bottom:22px}
+  .eyebrow{font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink);font-weight:700;margin-bottom:8px}
+
+  .steps{display:grid;gap:14px;list-style:none;padding:0;margin:0}
+  .steps li{display:flex;gap:20px;align-items:center;padding:22px 24px;border-radius:22px;background:var(--surface)}
+  .num{width:58px;height:58px;flex-shrink:0;border-radius:18px;background:var(--accent-soft);color:var(--accent-ink);font:700 1.7rem Fraunces,Georgia,serif;display:grid;place-items:center}
+  .steps b{font-size:1.2rem;display:block}
+  .steps span{color:var(--muted)}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+  .item{padding:20px 22px;border-top:2px solid var(--ink)}
+  .item b{display:block;font-size:1.08rem;margin-bottom:4px}
+  .item span{color:var(--muted);font-size:.97rem}
+
+  .prices{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;align-items:start}
+  .price{position:relative;padding:24px;border-radius:22px;background:var(--surface);border:1px solid var(--line);display:grid;gap:6px}
+  .price.featured{border:2px solid var(--accent)}
+  .price b{font-size:1.1rem}
+  .price .amount{font:700 1.7rem Fraunces,Georgia,serif;color:var(--accent-ink);font-variant-numeric:tabular-nums}
+  .price span{color:var(--muted);font-size:.97rem}
+  .tag{position:absolute;top:-12px;left:22px;background:var(--accent);color:var(--on-accent);font-size:.75rem;font-weight:700;padding:3px 12px;border-radius:999px}
+  .talk{margin:18px 0 0;padding:16px 20px;border-radius:16px;background:var(--accent-soft);color:var(--ink)}
+  .for{display:flex;flex-wrap:wrap;gap:10px}
+  .for span{padding:10px 18px;border-radius:999px;background:var(--accent-soft);color:var(--accent-ink);font-weight:700}
+
+  .cta{border-radius:28px;background:var(--accent);color:var(--on-accent);padding:clamp(24px,5vw,40px);display:grid;gap:18px}
+  .cta h2{margin:0;color:var(--on-accent)}
+  .cta p{margin:0;opacity:.92;max-width:48ch}
+  .contacts{display:grid;gap:10px}
+  .contact{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:var(--surface);color:var(--ink);border-radius:16px;padding:14px 18px}
+  .contact small{display:block;color:var(--muted);font-size:.8rem;text-transform:uppercase;letter-spacing:.08em}
+  .contact strong{font-size:1.1rem;word-break:break-all}
+  .contact a{color:inherit}
+
+  button{font:700 .92rem "DM Sans",system-ui,sans-serif;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:10px 16px;border-radius:12px;cursor:pointer;min-height:44px}
+  button.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+  button:hover{border-color:var(--accent)}
+  button:focus-visible,a:focus-visible{outline:3px solid var(--accent-ink);outline-offset:2px}
+
+  .share{border:2px dashed var(--line);border-radius:24px;padding:clamp(20px,4vw,32px);display:grid;gap:18px}
+  .share p.note{margin:0;color:var(--muted)}
+  .post{background:var(--surface);border-radius:16px;padding:18px 20px;display:grid;gap:12px}
+  .post h3{font-family:"DM Sans",sans-serif;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);letter-spacing:.1em}
+  .post pre{margin:0;white-space:pre-wrap;font:1rem/1.6 "DM Sans",system-ui,sans-serif}
+  .row{display:flex;gap:10px;flex-wrap:wrap}
+
+  footer{color:var(--muted);font-size:.9rem;text-align:center}
+  .toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 22px);transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;font-weight:700;opacity:0;transition:opacity .2s;pointer-events:none}
+  .toast.show{opacity:1}
+  @media (prefers-reduced-motion:reduce){.toast{transition:none}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="handle">
+      <div class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M7 6.5h.01"/><path d="M10 6.5h.01"/></svg></div>
+      <span>@hemsidorjustnu</span>
+    </div>
+    <h1>Ditt företag förtjänar en hemsida. <em>Just nu.</em></h1>
+    <p class="lead">Jag heter Melvin Viklund och bygger snygga, snabba och mobilvänliga hemsidor åt småföretag i Vaxholm, Åkersberga och Roslagen. Helt utan krångel.</p>
+    <div class="badges">
+      <span class="badge"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Gratis förslag först</span>
+      <span class="badge"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Live på några dagar</span>
+      <span class="badge"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Lokal, går att träffa</span>
+    </div>
+  </header>
+
+  <section>
+    <div class="eyebrow">Så funkar det</div>
+    <h2>Tre steg till en färdig hemsida</h2>
+    <ol class="steps">
+      <li><div class="num">1</div><div><b>Vi pratar</b><span>Berätta om ditt företag och vad hemsidan ska göra för dig.</span></div></li>
+      <li><div class="num">2</div><div><b>Jag bygger ett förslag</b><span>Du får se hur din sida kan se ut innan du bestämmer dig. Vi justerar tills det känns rätt.</span></div></li>
+      <li><div class="num">3</div><div><b>Du går live</b><span>Hemsidan publiceras och är redo att ta emot kunder.</span></div></li>
+    </ol>
+  </section>
+
+  <section>
+    <div class="eyebrow">Det här ingår</div>
+    <h2>Byggt för hur kunder faktiskt letar</h2>
+    <div class="grid">
+      <div class="item"><b>Mobilen först</b><span>De flesta googlar i telefonen. Sidan ser lika bra ut där som på datorn.</span></div>
+      <div class="item"><b>Ring med ett tryck</b><span>Kunden trycker på numret och ringer direkt.</span></div>
+      <div class="item"><b>Öppet just nu</b><span>Sidan visar automatiskt om du har öppet.</span></div>
+      <div class="item"><b>Karta och vägbeskrivning</b><span>Så att kunderna hittar rätt dörr.</span></div>
+      <div class="item"><b>Lätt att hitta på Google</b><span>Egen sida gör att du syns när folk söker i ditt område.</span></div>
+      <div class="item"><b>Svenska och engelska</b><span>Om du vill, till exempel för turister.</span></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Priser</div>
+    <h2>Så här kan det kosta</h2>
+    <div class="prices">
+      <div class="price">
+        <b>Start</b>
+        <div class="amount">från 2 995 kr</div>
+        <span>En snygg sida med allt det viktigaste: vad du gör, öppettider, karta och kontakt.</span>
+      </div>
+      <div class="price featured">
+        <div class="tag">Vanligast</div>
+        <b>Företag</b>
+        <div class="amount">från 4 995 kr</div>
+        <span>Flera sidor, till exempel tjänster, meny eller prislista, om oss och offertförfrågan.</span>
+      </div>
+      <div class="price">
+        <b>Skötsel</b>
+        <div class="amount">från 149 kr/mån</div>
+        <span>Valfritt. Jag uppdaterar texter, bilder och öppettider åt dig när något ändras.</span>
+      </div>
+    </div>
+    <p class="talk"><strong>Priset går att diskutera.</strong> Alla företag är olika, så vi pratar om vad du behöver och kommer överens om ett pris som känns rätt. Förslaget är alltid gratis.</p>
+  </section>
+
+  <section>
+    <div class="eyebrow">Publicering</div>
+    <h2>Så kommer hemsidan ut på nätet</h2>
+    <ol class="steps">
+      <li><div class="num">1</div><div><b>Du godkänner förslaget</b><span>När du är nöjd med hur sidan ser ut gör jag den klar med dina texter och bilder.</span></div></li>
+      <li><div class="num">2</div><div><b>Vi fixar en adress</b><span>Till exempel dittforetag.se. Domänen står i ditt namn och kostar oftast runt 100 till 200 kr per år. Har du redan en adress använder vi den.</span></div></li>
+      <li><div class="num">3</div><div><b>Jag publicerar</b><span>Jag lägger upp sidan, kopplar den till adressen och ser till att den är säker (https) och syns på Google.</span></div></li>
+      <li><div class="num">4</div><div><b>Den är din</b><span>Sidan är live och du kan dela länken direkt, på Instagram, Facebook och Google Maps.</span></div></li>
+    </ol>
+  </section>
+
+  <section>
+    <div class="eyebrow">Passar till exempel</div>
+    <h2>Små företag med nöjda kunder, men utan hemsida</h2>
+    <div class="for">
+      <span>Kaféer</span><span>Frisörer</span><span>Bilverkstäder</span><span>Målare och hantverkare</span><span>Restauranger</span><span>Föreningar</span>
+    </div>
+  </section>
+
+  <section class="cta" aria-labelledby="kontakt">
+    <h2 id="kontakt">Vill du ha en hemsida?</h2>
+    <p>Hör av dig så gör jag ett förslag åt ditt företag. Du förbinder dig inte till någonting.</p>
+    <div class="contacts">
+      <div class="contact"><div><small>Instagram, skicka ett DM med ordet HEMSIDA</small><strong><a href="https://www.instagram.com/hemsidorjustnu/" target="_blank" rel="noopener">@hemsidorjustnu</a></strong></div><button type="button" data-copy="@hemsidorjustnu" data-label="Instagram-namnet">Kopiera</button></div>
+      <div class="contact"><div><small>Telefon, ring eller sms:a</small><strong><a href="tel:+46723320081">072-332 00 81</a></strong></div><button type="button" data-copy="072-332 00 81" data-label="Numret">Kopiera</button></div>
+      <div class="contact"><div><small>Mejl</small><strong>hemsidorjustnu@gmail.com</strong></div><button type="button" data-copy="hemsidorjustnu@gmail.com" data-label="Mejladressen">Kopiera</button></div>
+    </div>
+  </section>
+
+  <section class="share" aria-labelledby="dela">
+    <div>
+      <div class="eyebrow">Till dig som vill hjälpa till</div>
+      <h2 id="dela" style="margin-bottom:6px">Dela vidare 🫶</h2>
+      <p class="note">Kopiera en text och klistra in på Facebook, i Messenger eller i ett sms. Skicka gärna med länken till den här sidan.</p>
+    </div>
+
+    <div class="post">
+      <h3>Facebook-inlägg</h3>
+      <pre id="fb">Hej alla! 💛
+
+Jag vill slå ett slag för Melvin Viklund, som har startat Hemsidor Just Nu och bygger hemsidor åt småföretag i Vaxholm, Åkersberga och Roslagen! 🎉
+
+✨ Snygga och mobilvänliga hemsidor
+✨ Du får ett gratis förslag innan du bestämmer dig
+✨ Klart på några dagar
+💰 Från 2 995 kr, och priset går att diskutera
+
+Känner du någon med ett kafé, en salong, en verkstad eller en firma som saknar hemsida (eller har en som behöver fräschas upp)? Tipsa dem gärna!
+
+📸 Instagram: @hemsidorjustnu
+📧 hemsidorjustnu@gmail.com
+📞 072-332 00 81
+
+Dela gärna, det betyder jättemycket 🫶❤️</pre>
+      <div class="row"><button type="button" class="primary" data-copy-el="fb" data-label="Inlägget">Kopiera inlägget</button></div>
+    </div>
+
+    <div class="post">
+      <h3>Kort meddelande till kontakter</h3>
+      <pre id="sms">Hej! Melvin Viklund har startat Hemsidor Just Nu och gör hemsidor åt småföretag 😊 Känner du någon som behöver en hemsida? Man får ett gratis förslag först. Kika på @hemsidorjustnu på Instagram, mejla hemsidorjustnu@gmail.com eller ring 072-332 00 81 🫶</pre>
+      <div class="row"><button type="button" class="primary" data-copy-el="sms" data-label="Meddelandet">Kopiera meddelandet</button></div>
+    </div>
+  </section>
+
+  <footer>Melvin Viklund · Hemsidor Just Nu · @hemsidorjustnu · hemsidorjustnu@gmail.com · 072-332 00 81</footer>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const toast = document.getElementById('toast'); let tt;
+function flash(m){ toast.textContent = m; toast.classList.add('show'); clearTimeout(tt); tt = setTimeout(() => toast.classList.remove('show'), 1600); }
+function selectEl(el){ const r = document.createRange(); r.selectNodeContents(el); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+document.querySelectorAll('button[data-copy], button[data-copy-el]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const el = btn.dataset.copyEl ? document.getElementById(btn.dataset.copyEl) : btn.previousElementSibling.querySelector('strong');
+    const text = btn.dataset.copy || el.textContent;
+    const p = navigator.clipboard && navigator.clipboard.writeText(text);
+    if (p) p.then(() => flash(btn.dataset.label + ' kopierat'), () => { selectEl(el); flash('Markerat, kopiera manuellt'); });
+    else { selectEl(el); flash('Markerat, kopiera manuellt'); }
+  });
+});
+</script>
+</body>
+</html>
