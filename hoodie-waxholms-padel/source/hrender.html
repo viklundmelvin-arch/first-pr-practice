@@ -1,0 +1,7 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:Cinzel;src:url("Cinzel[wght].ttf")}@font-face{font-family:Corm;src:url("CormorantGaramond[wght].ttf")}@font-face{font-family:Pinyon;src:url("PinyonScript-Regular.ttf")}
+html,body{margin:0;background:transparent}.cinzel{font-family:Cinzel}.corm{font-family:Corm}.pinyon{font-family:Pinyon}</style></head>
+<body><div id="o"></div><script src="hoodie_designs.js"></script><script>
+const [k,ink,acc,bg]=decodeURIComponent(location.hash.slice(1)).split('|');
+document.getElementById('o').innerHTML=HD[k](ink,acc,bg);document.fonts.ready.then(()=>document.body.dataset.ready=1);
+</script></body></html>
