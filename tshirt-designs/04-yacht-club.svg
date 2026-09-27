@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600">
+  <!-- burgee flag -->
+  <path d="M170 150 L430 210 L170 270 Z" fill="#0f2340"/>
+  <path d="M170 150 L430 210 L170 270 Z" fill="none" stroke="#b3202a" stroke-width="6"/>
+  <path d="M190 190 L270 210 L190 230 Z" fill="#f3ead7"/>
+  <rect x="160" y="140" width="10" height="260" fill="#8a6a2e"/>
+  <circle cx="165" cy="136" r="9" fill="#c9a24a"/>
+  <!-- anchor -->
+  <g stroke="#0f2340" stroke-width="7" fill="none" stroke-linecap="round">
+    <circle cx="380" cy="300" r="12"/>
+    <line x1="380" y1="312" x2="380" y2="400"/>
+    <line x1="355" y1="330" x2="405" y2="330"/>
+    <path d="M345 375 Q380 420 415 375"/>
+  </g>
+  <g font-family="'Playfair Display', Didot, Georgia, serif" fill="#0f2340" text-anchor="middle">
+    <text x="300" y="470" font-size="58" font-weight="700" letter-spacing="10">GRISH</text>
+    <text x="300" y="508" font-size="22" letter-spacing="10">YACHT CLUB</text>
+    <text x="300" y="545" font-size="14" letter-spacing="6" fill="#b3202a">SKÄRGÅRDEN · SINCE FOREVER</text>
+  </g>
+</svg>

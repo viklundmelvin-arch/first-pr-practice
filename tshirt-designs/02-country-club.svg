@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600">
+  <defs><path id="arc" d="M90 300 A210 210 0 0 1 510 300"/></defs>
+  <g font-family="'Playfair Display', Didot, Georgia, serif" fill="#1f4d2b" text-anchor="middle">
+    <text font-size="46" font-weight="700" letter-spacing="10"><textPath href="#arc" startOffset="50%">ÖSTERMALM</textPath></text>
+  </g>
+  <!-- crossed tennis rackets -->
+  <g stroke="#1f4d2b" stroke-width="5" fill="none">
+    <g transform="rotate(-35 300 330)">
+      <ellipse cx="300" cy="270" rx="38" ry="52"/>
+      <line x1="300" y1="322" x2="300" y2="420"/>
+      <g stroke-width="1.5"><line x1="282" y1="225" x2="282" y2="315"/><line x1="300" y1="220" x2="300" y2="320"/><line x1="318" y1="225" x2="318" y2="315"/><line x1="265" y1="250" x2="335" y2="250"/><line x1="263" y1="270" x2="337" y2="270"/><line x1="265" y1="290" x2="335" y2="290"/></g>
+    </g>
+    <g transform="rotate(35 300 330)">
+      <ellipse cx="300" cy="270" rx="38" ry="52"/>
+      <line x1="300" y1="322" x2="300" y2="420"/>
+      <g stroke-width="1.5"><line x1="282" y1="225" x2="282" y2="315"/><line x1="300" y1="220" x2="300" y2="320"/><line x1="318" y1="225" x2="318" y2="315"/><line x1="265" y1="250" x2="335" y2="250"/><line x1="263" y1="270" x2="337" y2="270"/><line x1="265" y1="290" x2="335" y2="290"/></g>
+    </g>
+  </g>
+  <circle cx="300" cy="420" r="14" fill="#e9dcc0" stroke="#1f4d2b" stroke-width="3"/>
+  <g font-family="'Playfair Display', Didot, Georgia, serif" fill="#1f4d2b" text-anchor="middle">
+    <text x="300" y="485" font-size="34" font-weight="700" letter-spacing="6">COUNTRY CLUB</text>
+    <text x="300" y="520" font-size="16" letter-spacing="6">MEMBERS ONLY · GRISH &amp; OLD MONEY</text>
+  </g>
+</svg>

@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600">
+  <g transform="translate(300 300) scale(1.22) translate(-300 -300)"><g fill="none" stroke="#0f2340" stroke-width="3">
+    <!-- laurel left -->
+    <path d="M300 520 C180 500 120 400 130 260" />
+    <path d="M300 520 C420 500 480 400 470 260" />
+  </g>
+  <g fill="#0f2340">
+    <g id="leafL">
+      <ellipse cx="140" cy="300" rx="10" ry="24" transform="rotate(-30 140 300)"/>
+      <ellipse cx="150" cy="350" rx="10" ry="24" transform="rotate(-45 150 350)"/>
+      <ellipse cx="172" cy="398" rx="10" ry="24" transform="rotate(-60 172 398)"/>
+      <ellipse cx="205" cy="440" rx="10" ry="24" transform="rotate(-72 205 440)"/>
+      <ellipse cx="245" cy="475" rx="10" ry="24" transform="rotate(-82 245 475)"/>
+      <ellipse cx="125" cy="300" rx="9" ry="22" transform="rotate(20 125 300)"/>
+      <ellipse cx="130" cy="352" rx="9" ry="22" transform="rotate(5 130 352)"/>
+      <ellipse cx="148" cy="404" rx="9" ry="22" transform="rotate(-10 148 404)"/>
+      <ellipse cx="178" cy="452" rx="9" ry="22" transform="rotate(-25 178 452)"/>
+    </g>
+    <use href="#leafL" transform="translate(600 0) scale(-1 1)"/>
+  </g></g><g fill="#0f2340">
+    <!-- crown -->
+    <path d="M250 150 L262 105 L282 132 L300 92 L318 132 L338 105 L350 150 Z"/>
+    <rect x="248" y="154" width="104" height="10"/>
+    <circle cx="262" cy="100" r="6"/><circle cx="300" cy="86" r="7"/><circle cx="338" cy="100" r="6"/>
+  </g>
+  <g font-family="'Playfair Display', Didot, 'Bodoni 72', Georgia, serif" fill="#0f2340" text-anchor="middle">
+    <text x="300" y="235" font-size="22" letter-spacing="8">EST. MMXXVI</text>
+    <text x="300" y="330" font-size="96" font-weight="700" letter-spacing="6">GRISH</text>
+    <text x="300" y="372" font-size="26" font-style="italic">&amp; Old Money</text>
+    <text x="300" y="418" font-size="13" letter-spacing="5">STOCKHOLM · SVERIGE</text>
+  </g>
+</svg>

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600">
+  <g font-family="'Playfair Display', Didot, Georgia, serif" fill="#f3ead7" text-anchor="middle">
+    <text x="300" y="180" font-size="30" font-style="italic">old money</text>
+    <text x="300" y="270" font-size="110" font-weight="700" letter-spacing="4">NEVER</text>
+    <text x="300" y="370" font-size="110" font-weight="700" letter-spacing="4">DIES</text>
+  </g>
+  <!-- sailboat -->
+  <g fill="#f3ead7">
+    <path d="M300 395 L300 480 L250 480 Z"/>
+    <path d="M306 405 L306 480 L345 480 Z"/>
+    <path d="M230 488 L370 488 L352 510 L248 510 Z"/>
+    <rect x="302" y="392" width="2" height="96"/>
+  </g>
+  <path d="M180 525 q15 -10 30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0" stroke="#f3ead7" stroke-width="3" fill="none"/>
+  <text x="300" y="565" font-family="Georgia, serif" font-size="15" letter-spacing="8" fill="#c9a24a" text-anchor="middle">SANDHAMN SEGELSÄLLSKAP</text>
+</svg>
