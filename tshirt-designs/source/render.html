@@ -1,0 +1,24 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:Cinzel;src:url("Cinzel[wght].ttf")}
+@font-face{font-family:Corm;src:url("CormorantGaramond[wght].ttf")}
+@font-face{font-family:Play;src:url("PlayfairDisplay[wght].ttf")}
+@font-face{font-family:PlayI;src:url("PlayfairDisplay-Italic[wght].ttf")}
+@font-face{font-family:Pinyon;src:url("PinyonScript-Regular.ttf")}
+@font-face{font-family:Grad;src:url("Graduate-Regular.ttf")}
+@font-face{font-family:Frak;src:url("UnifrakturMaguntia-Book.ttf")}
+@font-face{font-family:Allura;src:url("Allura-Regular.ttf")}
+html,body{margin:0;background:transparent}
+.cinzel{font-family:Cinzel}.corm{font-family:Corm}.play{font-family:Play}.playi{font-family:PlayI}
+.pinyon{font-family:Pinyon}.grad{font-family:Grad}.frak{font-family:Frak}.allura{font-family:Allura}
+</style></head><body><div id="o"></div>
+<script src="designs.js"></script>
+<script>
+const k=location.hash.slice(1);
+document.getElementById('o').innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" width="1000" height="1000">
+<defs><filter id="worn" x="0" y="0" width="100%" height="100%">
+<feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" seed="7" result="n"/>
+<feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  22 0 0 0 -15.2" result="holes"/>
+<feComposite in="SourceGraphic" in2="holes" operator="out"/></filter></defs>
+<g filter="url(#worn)">${D[k].svg}</g></svg>`;
+document.fonts.ready.then(()=>document.body.dataset.ready=1);
+</script></body></html>
