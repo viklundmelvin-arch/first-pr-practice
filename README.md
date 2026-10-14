@@ -50,3 +50,5 @@ Bookmakers kan begränsa konton som konsekvent spelar på värde.
 ## Deep Cut (browser game)
 
 `deep-cut/index.html` is a single-file game: answer simple questions with the rarest valid answer you can think of. Rarer answers drop better loot (Common → Mythic). Open the file in a browser to play; no build step.
+
+The answer boards are complete lists where possible (all 1,025 Pokémon, every country, every Minecraft mob, ~950 sports), built by `deep-cut/tools/build_extras.py` from PokéAPI, mledoze/countries, PrismarineJS minecraft-data and dariusk/corpora, plus hand-researched gaming lists.
