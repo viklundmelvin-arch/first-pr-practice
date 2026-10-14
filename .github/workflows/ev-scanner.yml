@@ -1,0 +1,38 @@
+name: EV scanner
+
+on:
+  schedule:
+    # Every 3 hours. Free tier of The Odds API is 500 credits/month:
+    # 8 runs/day x 30 days x 2 sports = 480 credits.
+    - cron: "17 */3 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: ev-scanner
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Restore notified-bets state
+        uses: actions/cache@v4
+        with:
+          path: state
+          key: ev-state-${{ github.run_id }}
+          restore-keys: ev-state-
+
+      - name: Scan for value bets
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          SPORTS: ${{ vars.SPORTS || 'soccer_epl,soccer_sweden_allsvenskan' }}
+          MIN_EV: ${{ vars.MIN_EV || '0.03' }}
+        run: python ev_scanner.py
