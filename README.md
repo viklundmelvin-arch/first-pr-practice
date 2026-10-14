@@ -46,3 +46,7 @@ ODDS_API_KEY=din-nyckel python ev_scanner.py
 
 Obs: ett positivt EV är ett statistiskt övertag över många spel, ingen garanti för enskilda matcher.
 Bookmakers kan begränsa konton som konsekvent spelar på värde.
+
+## Deep Cut (browser game)
+
+`deep-cut/index.html` is a single-file game: answer simple questions with the rarest valid answer you can think of. Rarer answers drop better loot (Common → Mythic). Open the file in a browser to play; no build step.
