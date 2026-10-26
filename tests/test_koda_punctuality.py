@@ -1,9 +1,10 @@
+import zipfile
 from datetime import date, datetime
 
 import py7zr
 from google.transit import gtfs_realtime_pb2
 
-from koda_punctuality import TZ, classify, extract_line, find_departures, observed_times, read_7z_members
+from koda_punctuality import TZ, classify, extract_line, find_departures, observed_times, read_archive_members
 
 GTFS = {
     "routes.txt": "route_id,route_short_name\nR670,670\nR680,680\n",
@@ -70,9 +71,18 @@ def test_classify_thresholds():
     assert classify(181) == "sen"
 
 
-def test_read_7z_members_finds_files_in_subfolders(tmp_path):
+def test_read_archive_members_finds_files_in_subfolders(tmp_path):
     archive = tmp_path / "a.7z"
     with py7zr.SevenZipFile(archive, "w") as z:
         z.writestr(b"x", "sl/routes.txt")
         z.writestr(b"y", "sl/other.txt")
-    assert read_7z_members(archive, {"routes.txt"}) == {"routes.txt": b"x"}
+    assert read_archive_members(archive, {"routes.txt"}) == {"routes.txt": b"x"}
+
+
+def test_read_archive_members_reads_zip(tmp_path):
+    # KoDa's v2 API serves GTFS-static as zip even though the old docs say 7z.
+    archive = tmp_path / "a.archive"
+    with zipfile.ZipFile(archive, "w") as z:
+        z.writestr("sl/routes.txt", "x")
+        z.writestr("sl/trips.txt", "y")
+    assert read_archive_members(archive, {"routes.txt"}) == {"routes.txt": b"x"}

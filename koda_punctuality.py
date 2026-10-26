@@ -17,6 +17,7 @@ import tempfile
 import time
 import urllib.error
 import urllib.request
+import zipfile
 from datetime import date, datetime, timedelta
 from pathlib import Path
 from zoneinfo import ZoneInfo
@@ -68,8 +69,16 @@ def download(url, dest, key, max_wait=900):
         time.sleep(30)
 
 
-def read_7z_members(path, wanted):
-    """Return {basename: bytes} for archive members whose basename is in `wanted` (None = all)."""
+def read_archive_members(path, wanted):
+    """Return {basename: bytes} for archive members whose basename is in `wanted` (None = all).
+
+    KoDa serves some archives as zip and others as 7z, so detect the format from the file itself.
+    """
+    if zipfile.is_zipfile(path):
+        with zipfile.ZipFile(path) as z:
+            names = [n for n in z.namelist() if not n.endswith("/")]
+            return {os.path.basename(n): z.read(n) for n in names
+                    if wanted is None or os.path.basename(n) in wanted}
     with tempfile.TemporaryDirectory() as tmp, py7zr.SevenZipFile(path) as z:
         names = [n for n in z.getnames() if wanted is None or os.path.basename(n) in wanted]
         z.extract(path=tmp, targets=names)
@@ -133,12 +142,12 @@ def load_line(operator, line, day, key, cache):
     out = cache / f"static-{operator}-{line}-{day}.json"
     if out.exists():
         return json.loads(out.read_text())
-    archive = cache / f"static-{operator}-{day}.7z"
+    archive = cache / f"static-{operator}-{day}.archive"
     if not archive.exists():
         print(f"  hämtar GTFS-static för {day} ...", file=sys.stderr)
         download(STATIC_URL.format(operator=operator, date=day, key=key), archive, key)
     wanted = {"routes.txt", "trips.txt", "stop_times.txt", "stops.txt", "calendar.txt", "calendar_dates.txt"}
-    data = extract_line(read_7z_members(archive, wanted), line, day)
+    data = extract_line(read_archive_members(archive, wanted), line, day)
     out.write_text(json.dumps(data))
     archive.unlink()
     return data
@@ -208,11 +217,11 @@ def load_rt(operator, day, hour, targets, key, cache):
     if out.exists():
         stored = json.loads(out.read_text())
     else:
-        archive = cache / f"rt-{operator}-{day}-{hour:02d}.7z"
+        archive = cache / f"rt-{operator}-{day}-{hour:02d}.archive"
         if not archive.exists():
             print(f"  hämtar TripUpdates {day} timme {hour} ...", file=sys.stderr)
             download(RT_URL.format(operator=operator, date=day, hour=hour, key=key), archive, key)
-        files = read_7z_members(archive, None)
+        files = read_archive_members(archive, None)
         feeds = [b for name, b in sorted(files.items()) if name.endswith(".pb")]
         stamps = [ts for ts in (feed_timestamp(b) for b in feeds) if ts]
         obs = observed_times(feeds, targets)
