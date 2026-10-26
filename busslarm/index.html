@@ -1,355 +1,1364 @@
 <title>Busslarm</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&display=swap">
 <style>
-/* Layout: one column, the clock and wake time on top, the backwards plan below it, the bus evidence last. */
+/* Layout: one phone-width column like a departure board. Big wake time, then the day drawn as a line map, rules instead of cards, tab bar at the bottom. */
 :root {
-  --bg: #eef1f6;
-  --surface: #ffffff;
-  --ink: #18203a;
-  --muted: #5d6680;
-  --line: #d5dbe7;
-  --dawn: #e2772f;
-  --dawn-soft: #fbe6d6;
-  --bus: #2f5fd0;
-  --ok: #2b8a57;
-  --warn: #b5481f;
-  --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
-  --body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
-  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #0f1424; --surface: #182036; --ink: #e8ecf6; --muted: #9aa4c0; --line: #2a3452;
-    --dawn: #f29a52; --dawn-soft: #3a2a22; --bus: #7ea2ff; --ok: #5fc48d; --warn: #f08a63;
-    color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --bg: #0f1424; --surface: #182036; --ink: #e8ecf6; --muted: #9aa4c0; --line: #2a3452;
-  --dawn: #f29a52; --dawn-soft: #3a2a22; --bus: #7ea2ff; --ok: #5fc48d; --warn: #f08a63;
+  --desk: #0b0a09;
+  --bg: #12110f;
+  --panel: #1a1916;
+  --raise: #23211d;
+  --ink: #ede6d8;
+  --muted: #9b9384;
+  --faint: #5f594f;
+  --line: #2e2b26;
+  --amber: #f2a93b;
+  --amber-ink: #1a1206;
+  --amber-soft: #3a2a12;
+  --ok: #93b77a;
+  --bad: #e0705a;
+  --scrim: rgba(0, 0, 0, .6);
+  --map-bg: #171613;
+  --map-street: #26241f;
+  --map-green: #1b2119;
+  --l670x: #e2604c;
+  --l670: #d98aa6;
+  --l3: #5aa2e6;
+  --l7: #4fb8a0;
+  --alarm-bg: #070605;
+  --alarm-ink: #ede6d8;
+  --alarm-amber: #f2a93b;
+  --display: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", system-ui, sans-serif;
+  --body: "Barlow", "Segoe UI", system-ui, -apple-system, sans-serif;
   color-scheme: dark;
 }
-* { box-sizing: border-box; }
-body {
-  background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.5;
-  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
-  padding-block: 24px 48px;
+:root[data-app-theme="light"] {
+  --desk: #dcd7cc; --bg: #eeebe4; --panel: #f7f5f0; --raise: #e5e1d8; --ink: #1d1b17; --muted: #6b6458; --faint: #a39b8c;
+  --line: #d4cec2; --amber: #a86304; --amber-ink: #fff8ec; --amber-soft: #f1dfbf; --ok: #4c7a32; --bad: #b5412b;
+  --scrim: rgba(30, 25, 15, .35); --map-bg: #e7e3d9; --map-street: #f8f6f1; --map-green: #dde3d2;
+  --l670x: #c23b28; --l670: #a8466f; --l3: #2f6fb5; --l7: #23806b;
+  color-scheme: light;
 }
-main { max-width: 720px; margin: 0 auto; display: grid; gap: 20px; }
-h1, h2 { font-family: var(--display); text-wrap: balance; margin: 0; }
-h2 { font-size: 1.15rem; font-weight: 700; }
-.num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
-.eyebrow { font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px; display: grid; gap: 14px; min-width: 0; }
-.muted { color: var(--muted); }
+@media (prefers-color-scheme: light) {
+  :root[data-app-theme="system"] {
+    --desk: #dcd7cc; --bg: #eeebe4; --panel: #f7f5f0; --raise: #e5e1d8; --ink: #1d1b17; --muted: #6b6458; --faint: #a39b8c;
+    --line: #d4cec2; --amber: #a86304; --amber-ink: #fff8ec; --amber-soft: #f1dfbf; --ok: #4c7a32; --bad: #b5412b;
+    --scrim: rgba(30, 25, 15, .35); --map-bg: #e7e3d9; --map-street: #f8f6f1; --map-green: #dde3d2;
+    --l670x: #c23b28; --l670: #a8466f; --l3: #2f6fb5; --l7: #23806b;
+    color-scheme: light;
+  }
+}
+* { box-sizing: border-box; }
+html, body { background: var(--bg); color: var(--ink); }
+body {
+  font-family: var(--body); font-size: 16px; line-height: 1.45;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0;
+}
 p { margin: 0; }
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+.num { font-variant-numeric: tabular-nums; }
 
-.hero { display: grid; gap: 6px; }
-.hero header { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
-.hero h1 { font-size: 1.1rem; font-weight: 500; color: var(--muted); }
-.now { font-size: 1rem; color: var(--muted); }
-.wake { font-family: var(--display); font-weight: 700; font-size: clamp(4.5rem, 22vw, 8rem); line-height: .95; letter-spacing: -.02em; color: var(--dawn); }
-.wake-sub { font-size: 1.05rem; }
-.alarm-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-top: 8px; }
-button { font: inherit; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); padding: 10px 16px; cursor: pointer; }
-button.primary { background: var(--dawn); border-color: var(--dawn); color: #fff; font-weight: 700; }
-button:focus-visible, input:focus-visible { outline: 3px solid var(--bus); outline-offset: 2px; }
-.status-pill { font-size: .85rem; padding: 4px 10px; border-radius: 999px; background: var(--dawn-soft); color: var(--ink); }
+.app { max-width: 460px; margin: 0 auto; min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; }
+@media (min-width: 640px) {
+  html, body { background: var(--desk); }
+  body { padding-block: 28px; }
+  .app { background: var(--bg); border: 1px solid var(--line); border-radius: 24px; padding-inline: 22px; min-height: calc(100vh - 56px); }
+}
 
-.fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
-label { display: grid; gap: 4px; font-size: .9rem; color: var(--muted); }
-input { font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; width: 100%; min-width: 0; }
-input[type="time"], input[type="number"] { font-family: var(--mono); }
+.top { display: flex; align-items: center; gap: 12px; padding-block: 14px 8px; }
+.brand { font-family: var(--display); font-weight: 700; font-size: 1rem; letter-spacing: .16em; text-transform: uppercase; }
+.clock { margin-left: auto; font-family: var(--display); font-weight: 500; font-size: 1.1rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.iconbtn { background: none; border: 0; color: var(--muted); padding: 8px; margin-right: -8px; border-radius: 8px; cursor: pointer; display: grid; place-items: center; }
+.iconbtn svg { width: 22px; height: 22px; }
+.phase { font-size: .78rem; color: var(--muted); display: flex; gap: 8px; align-items: baseline; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+.phase::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--amber); flex: none; transform: translateY(-1px); }
 
-.routine { display: grid; gap: 8px; }
-.routine-row { display: grid; grid-template-columns: 1fr 88px 36px; gap: 8px; align-items: center; }
-.routine-row button { padding: 6px 0; color: var(--muted); }
-.routine-foot { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
-
-.timeline { list-style: none; margin: 0; padding: 0; display: grid; }
-.timeline li { display: grid; grid-template-columns: 4.2rem 1fr auto; gap: 12px; padding: 9px 0; border-top: 1px solid var(--line); align-items: baseline; }
-.timeline li:first-child { border-top: 0; }
-.timeline .t { font-family: var(--mono); font-variant-numeric: tabular-nums; }
-.timeline .d { color: var(--muted); font-size: .9rem; font-family: var(--mono); }
-.timeline li.key .t, .timeline li.key .what { font-weight: 700; }
-.timeline li.wake-row .t { color: var(--dawn); }
-.timeline li.bus-row .t { color: var(--bus); }
-
-.why { font-size: .95rem; }
-.chart-wrap { overflow-x: auto; }
-svg text { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
-.legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: .85rem; color: var(--muted); }
-.legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; background: var(--c); }
+main { flex: 1; padding-block: 18px 32px; min-width: 0; }
+.view { display: flex; flex-direction: column; gap: 24px; min-width: 0; }
+.block { display: flex; flex-direction: column; gap: 12px; padding-top: 16px; border-top: 1px solid var(--line); min-width: 0; }
+.label, h2 { font-family: var(--display); font-weight: 600; font-size: .85rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.spread { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
 .note { font-size: .85rem; color: var(--muted); }
-@media (prefers-reduced-motion: no-preference) { .wake { transition: color .3s; } }
+.warn { color: var(--bad); }
+.okc { color: var(--ok); }
+
+.btn { font-weight: 600; border-radius: 10px; border: 1px solid var(--line); background: var(--raise); padding: 10px 16px; min-height: 44px; cursor: pointer; }
+.btn.primary { background: var(--amber); border-color: var(--amber); color: var(--amber-ink); }
+.btn.ghost { background: none; }
+.btn.small { min-height: 36px; padding: 6px 12px; font-size: .9rem; }
+.btn.danger { color: var(--bad); }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.link { background: none; border: 0; padding: 0; color: var(--amber); font-weight: 600; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+
+.seg { display: flex; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.seg button { flex: 1; background: none; border: 0; border-left: 1px solid var(--line); padding: 9px 4px; color: var(--muted); font-weight: 600; font-size: .9rem; cursor: pointer; min-height: 40px; }
+.seg button:first-child { border-left: 0; }
+.seg button[aria-pressed="true"] { background: var(--amber-soft); color: var(--ink); }
+
+.field { display: flex; flex-direction: column; gap: 4px; font-size: .85rem; color: var(--muted); min-width: 0; }
+.field input, .field select, .inp { font: inherit; font-size: 1rem; color: var(--ink); background: var(--raise); border: 1px solid var(--line); border-radius: 8px; padding: 9px 10px; width: 100%; min-width: 0; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.check { display: flex; gap: 10px; align-items: center; font-size: .95rem; }
+.check input { width: 20px; height: 20px; accent-color: var(--amber); }
+
+/* Today */
+.dayhead { display: flex; align-items: center; gap: 6px; }
+.dayhead .label { flex: 1; }
+.wake { font-family: var(--display); font-weight: 600; font-size: clamp(5.6rem, 31vw, 8.6rem); line-height: .82; color: var(--amber); font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
+.wake.none { color: var(--faint); }
+.wake-sub { font-size: 1.05rem; }
+.gain { font-size: .95rem; color: var(--muted); }
+.gain b { color: var(--ink); font-weight: 600; }
+.armed { font-size: .9rem; color: var(--ok); }
+
+.lm { list-style: none; margin: 0; padding: 0; }
+.lm li { display: grid; grid-template-columns: 3.7rem 22px minmax(0, 1fr); column-gap: 10px; min-height: 46px; }
+.lm .t { font-family: var(--display); font-weight: 600; font-size: 1.3rem; line-height: 1.15; text-align: right; font-variant-numeric: tabular-nums; }
+.lm .t small { display: block; font-size: .7rem; font-weight: 600; letter-spacing: .08em; color: var(--muted); text-transform: uppercase; }
+.lm .rail { position: relative; }
+.lm .rail::before { content: ""; position: absolute; left: 50%; top: 10px; bottom: -10px; width: 4px; transform: translateX(-50%); background: var(--segc, var(--line)); }
+.lm li:last-child .rail::before { display: none; }
+.lm .dot { position: absolute; left: 50%; top: 5px; width: 13px; height: 13px; transform: translateX(-50%); border-radius: 50%; background: var(--bg); border: 3px solid var(--nodec, var(--ink)); z-index: 1; }
+.lm .body { padding-bottom: 14px; min-width: 0; }
+.lm .what { font-weight: 600; }
+.lm .det { color: var(--muted); font-size: .88rem; }
+.lm .s-routine { --segc: var(--amber); }
+.lm .s-routine .rail::before { width: 2px; }
+.lm .s-walk .rail::before { width: 3px; background: repeating-linear-gradient(to bottom, var(--muted) 0 3px, transparent 3px 8px); }
+.lm .s-bus .rail::before { width: 7px; background: var(--lc); }
+.lm .s-event .rail::before { width: 2px; background: var(--line); }
+.lm .n-wake .t { color: var(--amber); }
+.lm .n-wake .dot { --nodec: var(--amber); }
+.lm .n-event .dot { border-radius: 3px; background: var(--ink); --nodec: var(--ink); }
+.lm .n-bad .t, .lm .n-bad .what { color: var(--bad); }
+.lm .n-bad .dot { --nodec: var(--bad); }
+
+.chip { display: inline-block; font-family: var(--display); font-weight: 700; font-size: .85rem; line-height: 1.35; padding: 0 6px; border-radius: 4px; background: var(--lc); color: var(--bg); vertical-align: 1px; }
+.c-670X { --lc: var(--l670x); } .c-670 { --lc: var(--l670); } .c-3 { --lc: var(--l3); } .c-7 { --lc: var(--l7); }
+
+.riskhead { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.risk { font-family: var(--display); font-weight: 600; font-size: 1.35rem; }
+.risk.low { color: var(--ok); } .risk.mid { color: var(--amber); } .risk.high { color: var(--bad); } .risk.unk { color: var(--muted); }
+.ticks { display: flex; gap: 3px; align-items: flex-end; flex-wrap: wrap; }
+.tick { width: 10px; height: 28px; border-radius: 2px; background: var(--ok); position: relative; }
+.tick.fail { background: var(--bad); }
+.tick.mon::after { content: ""; position: absolute; left: 3px; bottom: -7px; width: 4px; height: 4px; border-radius: 50%; background: var(--muted); }
+.ticks.mini .tick { width: 4px; height: 16px; border-radius: 1px; }
+.ticks.mini .tick.mon::after { display: none; }
+
+.chart-wrap { overflow-x: auto; }
+.chart { display: block; width: 100%; min-width: 360px; }
+.chart text { fill: var(--muted); font-family: var(--display); font-size: 12px; }
+.chart .grid { stroke: var(--line); }
+.chart .tt { stroke: var(--muted); stroke-dasharray: 3 3; }
+.chart .you { stroke: var(--amber); }
+.chart .pt { fill: var(--ink); }
+.chart .pt.mon { fill: var(--bad); }
+.legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: .82rem; color: var(--muted); }
+.legend span::before { content: ""; display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; background: var(--c); }
+
+.morning { display: flex; flex-direction: column; gap: 12px; padding: 16px; border: 1px solid var(--amber); border-radius: 14px; }
+.morning .say { font-family: var(--display); font-weight: 600; font-size: 2rem; line-height: 1.05; }
+.morning .simclock { font-family: var(--display); font-size: 1.1rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.tracker { display: flex; flex-direction: column; gap: 6px; }
+.track { position: relative; height: 22px; }
+.track::before { content: ""; position: absolute; left: 0; right: 0; top: 9px; height: 4px; background: var(--lc); border-radius: 2px; }
+.track i { position: absolute; top: 6px; width: 10px; height: 10px; border-radius: 50%; background: var(--bg); border: 2px solid var(--lc); transform: translateX(-50%); }
+.track i.here { width: 14px; height: 14px; top: 4px; border-color: var(--ink); border-width: 3px; }
+.track b { position: absolute; top: 0; width: 22px; height: 22px; border-radius: 6px; background: var(--ink); transform: translateX(-50%); transition: left .9s linear; }
+.track b::after { content: ""; position: absolute; inset: 6px 5px; border-radius: 2px; background: var(--bg); }
+.log { list-style: none; margin: 0; padding: 0; font-size: .85rem; color: var(--muted); display: flex; flex-direction: column; gap: 2px; }
+
+/* Options */
+.opts { display: flex; flex-direction: column; }
+.opt { display: grid; grid-template-columns: 4.6rem minmax(0, 1fr) auto; gap: 2px 12px; align-items: start; padding: 14px 0; border: 0; border-top: 1px solid var(--line); background: none; text-align: left; width: 100%; cursor: pointer; }
+.opt:first-child { border-top: 0; }
+.opt .big { font-family: var(--display); font-weight: 600; font-size: 1.9rem; line-height: 1; font-variant-numeric: tabular-nums; }
+.opt .big small { display: block; font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-top: 3px; }
+.opt.rec .big { color: var(--amber); }
+.opt .mid { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.opt .legs { display: flex; gap: 4px; align-items: center; flex-wrap: wrap; font-size: .95rem; }
+.opt .sub { font-size: .85rem; color: var(--muted); }
+.opt .side { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; font-size: .8rem; color: var(--muted); }
+.opt .tag { font-family: var(--display); font-weight: 600; font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; color: var(--amber); }
+.opt.sel { box-shadow: inset 3px 0 0 var(--amber); padding-left: 10px; }
+.opt.no .big { color: var(--faint); text-decoration: line-through; text-decoration-thickness: 2px; }
+.opt.no { cursor: default; }
+.optdetail { padding: 4px 0 16px; display: flex; flex-direction: column; gap: 12px; }
+
+/* Week */
+.day { display: flex; flex-direction: column; gap: 8px; padding-top: 14px; border-top: 1px solid var(--line); }
+.day:first-child { border-top: 0; padding-top: 0; }
+.day h3 { font-family: var(--display); font-weight: 600; font-size: 1.25rem; }
+.day h3 span { color: var(--muted); font-weight: 500; }
+.ev { display: grid; grid-template-columns: 3.4rem minmax(0, 1fr); gap: 10px; background: none; border: 0; padding: 4px 0; text-align: left; cursor: pointer; width: 100%; }
+.ev .t { font-family: var(--display); font-weight: 600; font-size: 1.15rem; font-variant-numeric: tabular-nums; }
+.ev .sub { font-size: .85rem; color: var(--muted); }
+.daysum { font-size: .9rem; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.daysum .w { font-family: var(--display); font-weight: 600; font-size: 1.15rem; color: var(--amber); }
+
+/* Map */
+.map { display: block; width: 100%; max-width: 100%; aspect-ratio: 1 / 1; border: 1px solid var(--line); border-radius: 12px; background: var(--map-bg); }
+.map.editing { cursor: crosshair; border-color: var(--amber); }
+.map .street { stroke: var(--map-street); fill: none; }
+.map .park { fill: var(--map-green); }
+.map .route { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.map .walk { fill: none; stroke: var(--muted); stroke-dasharray: 2 5; stroke-linecap: round; }
+.map .walk.hl { stroke: var(--amber); }
+.map .stop { fill: var(--bg); stroke: var(--ink); }
+.map .stop.hl { stroke: var(--amber); }
+.map text { font-family: var(--body); }
+.map .lbl { fill: var(--ink); font-weight: 600; paint-order: stroke; stroke: var(--map-bg); stroke-linejoin: round; }
+.map .sub { fill: var(--muted); paint-order: stroke; stroke: var(--map-bg); stroke-linejoin: round; }
+.map .place { fill: var(--ink); }
+.map .home { fill: var(--amber); }
+.map .scale { stroke: var(--muted); }
+.places { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.places li { display: flex; flex-direction: column; gap: 3px; padding: 10px 0; border-top: 1px solid var(--line); }
+.places li:first-child { border-top: 0; }
+.places .name { font-weight: 600; display: flex; gap: 8px; align-items: baseline; justify-content: space-between; }
+.places .sub { font-size: .85rem; color: var(--muted); }
+
+/* Tabs */
+.tabs { position: sticky; bottom: 0; z-index: 5; display: grid; grid-template-columns: repeat(4, 1fr); background: var(--bg); border-top: 1px solid var(--line); margin-inline: -16px; padding: 4px 16px calc(4px + env(safe-area-inset-bottom, 0px)); }
+@media (min-width: 640px) { .tabs { margin-inline: -22px; padding-inline: 22px; border-radius: 0 0 24px 24px; } }
+.tab { background: none; border: 0; color: var(--muted); display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: .75rem; font-weight: 600; letter-spacing: .02em; padding: 7px 0; cursor: pointer; }
+.tab svg { width: 23px; height: 23px; }
+.tab[aria-current="page"] { color: var(--amber); }
+
+/* Sheet */
+.sheet { position: fixed; inset: 0; z-index: 30; background: var(--scrim); }
+.sheet-panel { position: absolute; left: 0; right: 0; bottom: 0; max-width: 480px; margin: 0 auto; max-height: 90%; overflow-y: auto; background: var(--panel); border: 1px solid var(--line); border-bottom: 0; border-radius: 18px 18px 0 0; padding: 18px max(16px, env(safe-area-inset-right, 0px)) calc(24px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); display: flex; flex-direction: column; gap: 18px; }
+.sheet-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.sheet-head h2 { font-size: 1rem; color: var(--ink); }
+.steps { display: flex; flex-direction: column; gap: 6px; }
+.step { display: grid; grid-template-columns: minmax(0, 1fr) 4.6rem 36px; gap: 6px; align-items: center; }
+.step .x { background: none; border: 0; color: var(--muted); cursor: pointer; padding: 8px; font-size: 1.1rem; }
+.prose { font-size: .92rem; color: var(--muted); display: flex; flex-direction: column; gap: 8px; }
+.prose b { color: var(--ink); font-weight: 600; }
+
+/* Alarm screen: always dark, it is 6 in the morning */
+.alarm { position: fixed; inset: 0; z-index: 40; background: var(--alarm-bg); color: var(--alarm-ink); display: flex; flex-direction: column; justify-content: center; gap: 22px; padding: calc(24px + env(safe-area-inset-top, 0px)) max(24px, env(safe-area-inset-right, 0px)) calc(24px + env(safe-area-inset-bottom, 0px)) max(24px, env(safe-area-inset-left, 0px)); }
+.alarm .inner { width: 100%; max-width: 420px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px; }
+.alarm .now { font-family: var(--display); font-weight: 600; font-size: clamp(6rem, 36vw, 10rem); line-height: .8; color: var(--alarm-amber); font-variant-numeric: tabular-nums; }
+.alarm .what { font-size: 1.15rem; }
+.alarm .what span { color: var(--alarm-amber); font-weight: 600; }
+.alarm .btns { display: flex; flex-direction: column; gap: 10px; }
+.alarm .btn { min-height: 60px; font-size: 1.15rem; background: #1d1b18; border-color: #34302a; color: var(--alarm-ink); }
+.alarm .btn.primary { background: var(--alarm-amber); border-color: var(--alarm-amber); color: #1a1206; }
+.alarm .hint { font-size: .9rem; color: #9b9384; }
+@media (prefers-reduced-motion: reduce) { .track b { transition: none; } }
 </style>
 
-<main>
-  <section class="hero" aria-live="polite">
-    <header>
-      <h1>Busslarm · 670X från Pålsundsvägen</h1>
-      <span class="now num" id="now">--:--:--</span>
-    </header>
-    <span class="eyebrow">Väckning i morgon</span>
-    <div class="wake num" id="wake">--:--</div>
-    <p class="wake-sub" id="wakeSub"></p>
-    <div class="alarm-row">
-      <button class="primary" id="arm" type="button">Starta larm</button>
-      <button id="test" type="button">Testa ljudet</button>
-      <span class="status-pill" id="armStatus">Larmet är av</span>
-    </div>
-    <p class="note">Larmet ringer bara medan sidan är öppen. Ett riktigt väckarlarm kräver en installerad app.</p>
-  </section>
+<div class="app">
+  <header class="top">
+    <span class="brand">Busslarm</span>
+    <span class="clock" id="clock">--:--</span>
+    <button class="iconbtn" id="openSettings" type="button" aria-label="Inställningar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v2.4M12 18.8v2.4M2.8 12h2.4M18.8 12h2.4M5.5 5.5l1.7 1.7M16.8 16.8l1.7 1.7M5.5 18.5l1.7-1.7M16.8 7.2l1.7-1.7"/></svg>
+    </button>
+  </header>
+  <p class="phase">Fas A, klickbar prototyp. Riktig data: 670X:s morgonavgångar från Pålsundsvägen och 19 morgnar för 07:21. Övriga linjer, platser och kartan är exempel.</p>
+  <main>
+    <section class="view" id="view-idag"></section>
+    <section class="view" id="view-vecka" hidden></section>
+    <section class="view" id="view-resa" hidden></section>
+    <section class="view" id="view-platser" hidden></section>
+  </main>
+  <nav class="tabs" aria-label="Huvudmeny">
+    <button class="tab" type="button" data-tab="idag" aria-current="page">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="13" r="7.5"/><path d="M12 9v4.2l2.6 1.6M4.5 4.5l2.5 2M19.5 4.5l-2.5 2"/></svg>Idag</button>
+    <button class="tab" type="button" data-tab="vecka">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 9.5h17M8 3v4M16 3v4M7.5 13.5h3M13.5 13.5h3M7.5 16.5h3"/></svg>Vecka</button>
+    <button class="tab" type="button" data-tab="resa">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="6" cy="18" r="2.2"/><circle cx="18" cy="6" r="2.2"/><path d="M8.2 18H15a3 3 0 0 0 0-6H9a3 3 0 0 1 0-6h6.8"/></svg>Resa</button>
+    <button class="tab" type="button" data-tab="platser">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/></svg>Platser</button>
+  </nav>
+</div>
 
-  <section class="panel">
-    <h2>Resan</h2>
-    <div class="fields">
-      <label for="arrive">Framme senast<input type="time" id="arrive" value="08:15"></label>
-      <label for="ride">Bussresa (min)<input type="number" id="ride" min="1" max="120" value="35"></label>
-      <label for="walkFrom">Gång från hållplats (min)<input type="number" id="walkFrom" min="0" max="60" value="5"></label>
-      <label for="walkTo">Gång till Pålsundsvägen (min)<input type="number" id="walkTo" min="0" max="60" value="6"></label>
-    </div>
-    <p class="note">Exempelvärden. Ändra dem till din egen resa; de sparas i den här webbläsaren.</p>
-  </section>
-
-  <section class="panel">
-    <h2>Morgonrutin</h2>
-    <div class="routine" id="routine"></div>
-    <div class="routine-foot">
-      <button type="button" id="addStep">Lägg till moment</button>
-      <span class="muted">Totalt <span class="num" id="routineTotal">0</span> min</span>
-    </div>
-  </section>
-
-  <section class="panel">
-    <h2>Morgonen baklänges</h2>
-    <ol class="timeline" id="timeline"></ol>
-    <p class="why" id="why"></p>
-  </section>
-
-  <section class="panel">
-    <h2>Så brukar 07.21-bussen gå</h2>
-    <p class="muted">Varje punkt är en vardagsmorgon 29 sep–23 okt 2026 enligt KoDa (SL:s sista prognos innan bussen lämnade hållplatsen). 28 september saknas i datat.</p>
-    <div class="chart-wrap"><svg id="chart" role="img" aria-label="Faktiska avgångstider för 07.21-bussen, 19 morgnar"></svg></div>
-    <div class="legend">
-      <span style="--c: var(--bus)">Avgång</span>
-      <span style="--c: var(--warn)">Måndag</span>
-      <span style="--c: var(--dawn)">Din tid vid hållplatsen</span>
-    </div>
-  </section>
-</main>
+<div class="sheet" id="sheet" hidden><div class="sheet-panel" id="sheetPanel" role="dialog" aria-modal="true"></div></div>
+<div class="alarm" id="alarm" hidden><div class="inner" id="alarmInner"></div></div>
 
 <script>
-// Weekday timetable for 670X at Pålsundsvägen (GTFS, 20 Oct 2026), seconds after midnight.
-const DEPARTURES = ["06:20", "06:36", "06:50", "07:05", "07:21:15", "07:37", "07:50"].map(parseClock);
-// Observed departures of the 07:21:15 trip, seconds after the timetable (KoDa TripUpdates).
-const HISTORY = {
-  [parseClock("07:21:15")]: [
+"use strict";
+// ---------- Time helpers ----------
+const DAY = 86400;
+const pc = s => { const [h, m, sec = 0] = String(s).split(":").map(Number); return h * 3600 + m * 60 + sec; };
+function fmt(sec, withSeconds = false) {
+  sec = ((Math.round(sec) % DAY) + DAY) % DAY;
+  const h = String(Math.floor(sec / 3600)).padStart(2, "0");
+  const m = String(Math.floor(sec % 3600 / 60)).padStart(2, "0");
+  const s = String(sec % 60).padStart(2, "0");
+  return withSeconds ? `${h}:${m}:${s}` : `${h}:${m}`;
+}
+function dur(sec) {
+  sec = Math.max(0, Math.round(sec));
+  if (sec < 60) return `${sec} s`;
+  const m = Math.floor(sec / 60), s = sec % 60;
+  if (m >= 60) return `${Math.floor(m / 60)} h ${m % 60} min`;
+  return s ? `${m} min ${s} s` : `${m} min`;
+}
+const durMin = sec => `${Math.round(sec / 60)} min`;
+const range = (a, b, step) => { const r = []; for (let t = a; t <= b; t += step) r.push(t); return r; };
+const DOW = ["sön", "mån", "tis", "ons", "tor", "fre", "lör"];
+const DOWL = ["söndag", "måndag", "tisdag", "onsdag", "torsdag", "fredag", "lördag"];
+const MON = ["jan", "feb", "mar", "apr", "maj", "jun", "jul", "aug", "sep", "okt", "nov", "dec"];
+const iso = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+const dateOf = s => new Date(s + "T12:00:00");
+const addDays = (s, n) => { const d = dateOf(s); d.setDate(d.getDate() + n); return iso(d); };
+const todayIso = () => iso(new Date());
+const nowSec = () => { const d = new Date(); return d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds(); };
+const dayType = s => [0, 6].includes(dateOf(s).getDay()) ? "helg" : "vardag";
+function dayName(s) {
+  const t = todayIso();
+  const d = dateOf(s);
+  const base = `${DOW[d.getDay()]} ${d.getDate()} ${MON[d.getMonth()]}`;
+  if (s === t) return `Idag · ${base}`;
+  if (s === addDays(t, 1)) return `Imorgon · ${base}`;
+  return base;
+}
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const $ = id => document.getElementById(id);
+
+// ---------- Network (phase A) ----------
+// Stops in metres on a local grid, north up. Pålsundsvägen is real; the rest is an example network.
+const STOPS = {
+  pal: { name: "Pålsundsvägen", x: 0, y: 0 },
+  ekb: { name: "Ekbacken", x: -200, y: 950 },
+  sta: { name: "Stationen", x: 19000, y: 200 },
+  sko: { name: "Skolvägen", x: 20600, y: 900 },
+  cen: { name: "Centrum", x: 20200, y: -300 },
+  par: { name: "Parkgatan", x: 21200, y: -900 },
+};
+const LINES = {
+  "670X": { kind: "regional" }, "670": { kind: "regional" }, "3": { kind: "city" }, "7": { kind: "city" },
+};
+// Assumed lateness when a trip has no history, per safety level (s).
+const UNKNOWN_LATE = { regional: { vanlig: 120, saker: 300, mycket: 480 }, city: { vanlig: 60, saker: 180, mycket: 300 } };
+const SAFETY = {
+  vanlig: { name: "Vanlig", q: 0.5, text: "Räknar med en vanlig morgon (medianen). Mest sömn, men var tredje morgon kan bli tight." },
+  saker: { name: "Säker", q: 0.9, text: "Räknar med en sen morgon: 9 av 10 morgnar gick bussen tidigare än så." },
+  mycket: { name: "Mycket säker", q: 1, text: "Räknar med den sämsta morgonen som finns i historiken." },
+};
+const STOP_SLACK = 30;       // stand at the stop this long before the earliest departure ever seen
+const NO_DATA_EARLY = 60;    // without history, be there a minute before the timetable
+const MIN_TRANSFER = 60;     // seconds between getting off and the next bus leaving
+const DETOUR = 1.25;         // walking distance = straight line × 1.25
+
+const REAL_670X = ["06:20", "06:36", "06:50", "07:05", "07:21:15", "07:37", "07:50"].map(pc);
+const TRIPS = [];
+function addTrips(line, dir, stops, offsetsMin, deps, days, isReal = () => false) {
+  for (const d of deps) TRIPS.push({ id: `${line}-${dir}-${fmt(d, true)}`, line, dir, stops, times: offsetsMin.map(o => d + Math.round(o * 60)), days, real: isReal(d) });
+}
+addTrips("670X", "in", ["pal", "sta", "sko", "cen"], [0, 28, 33, 36],
+  [...REAL_670X, ...range(pc("08:05"), pc("08:50"), 900), ...range(pc("09:20"), pc("15:50"), 1800), ...range(pc("16:05"), pc("18:50"), 900)],
+  "vardag", d => REAL_670X.includes(d));
+addTrips("670", "in", ["ekb", "pal", "sta", "sko", "cen"], [0, 3, 34, 41, 44], range(pc("05:37"), pc("22:07"), 1800), "alla");
+addTrips("3", "ut", ["sta", "cen", "sko"], [0, 5, 9], range(pc("06:01"), pc("21:51"), 600), "alla");
+addTrips("3", "in", ["sko", "cen", "sta"], [0, 4, 9], range(pc("06:03"), pc("21:53"), 600), "alla");
+addTrips("7", "ut", ["sta", "cen", "par"], [0, 4, 10], range(pc("06:08"), pc("21:53"), 900), "alla");
+addTrips("7", "in", ["par", "cen", "sta"], [0, 6, 10], range(pc("06:02"), pc("21:47"), 900), "alla");
+const TRIP_BY_ID = Object.fromEntries(TRIPS.map(t => [t.id, t]));
+const BY_STOP = {};
+for (const t of TRIPS) t.stops.forEach((s, i) => (BY_STOP[s] ||= []).push({ t, i }));
+for (const s in BY_STOP) BY_STOP[s].sort((a, b) => a.t.times[a.i] - b.t.times[b.i]);
+const LINES_AT = {};
+for (const t of TRIPS) for (const s of t.stops) (LINES_AT[s] ||= new Set()).add(t.line);
+
+// Observed departures of 670X 07:21:15 at Pålsundsvägen, seconds after the timetable (KoDa, weekdays).
+const HIST_RAW = {
+  "670X-in-07:21:15": [
     ["2026-09-29", 189], ["2026-09-30", 232], ["2026-10-01", 188], ["2026-10-02", 170],
     ["2026-10-05", 420], ["2026-10-06", 95], ["2026-10-07", 209], ["2026-10-08", 93], ["2026-10-09", 223],
     ["2026-10-12", 895], ["2026-10-13", 181], ["2026-10-14", 345], ["2026-10-15", 191], ["2026-10-16", 156],
     ["2026-10-19", 187], ["2026-10-20", 270], ["2026-10-21", 193], ["2026-10-22", 229], ["2026-10-23", 148],
   ],
 };
-const STOP_SLACK = 30;         // be at the stop this long before the earliest bus seen
-const NO_DATA_EARLY = 60;      // without history, be there a minute early (buses may run ahead)
-const NO_DATA_LATE = 300;      // without history, plan the arrival as if the bus runs 5 min late
-const DEFAULT_ROUTINE = [["Hygien", 15], ["Frukost", 15], ["Påklädning", 10], ["Packning", 5]];
-
-function parseClock(s) {
-  const [h, m, sec = 0] = s.split(":").map(Number);
-  return h * 3600 + m * 60 + sec;
-}
-function fmt(sec, withSeconds = false) {
-  sec = ((Math.round(sec) % 86400) + 86400) % 86400;
-  const h = String(Math.floor(sec / 3600)).padStart(2, "0");
-  const m = String(Math.floor(sec % 3600 / 60)).padStart(2, "0");
-  const s = String(sec % 60).padStart(2, "0");
-  return withSeconds ? `${h}.${m}.${s}` : `${h}.${m}`;
-}
-function quantile(sorted, q) {
-  return sorted[Math.min(sorted.length - 1, Math.ceil(q * sorted.length) - 1)];
+const quantile = (sorted, q) => sorted[Math.min(sorted.length - 1, Math.max(0, Math.ceil(q * sorted.length) - 1))];
+const HIST = {};
+for (const [id, rows] of Object.entries(HIST_RAW)) {
+  const sorted = rows.map(r => r[1]).sort((a, b) => a - b);
+  HIST[id] = { rows, sorted, min: sorted[0], q: q => quantile(sorted, q), median: quantile(sorted, 0.5) };
 }
 
-function store(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch {} }
-function load(key, fallback) { try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; } catch { return fallback; } }
+// ---------- State ----------
+const KEY = "busslarm.v2";
+function seed() {
+  const t = todayIso();
+  const d1 = addDays(t, 1), d2 = addDays(t, 2), d3 = addDays(t, 3);
+  let sat = null;
+  for (let i = 1; i <= 6; i++) if (dateOf(addDays(t, i)).getDay() === 6) sat = addDays(t, i);
+  const events = [
+    { id: "e1", title: "Prov i matte", place: "skolan", date: d1, start: pc("08:30"), end: pc("10:00"), early: 15, routine: "vanlig", repeat: false, example: true },
+    { id: "e2", title: "Möte med handledare", place: "jobbet", date: d1, start: pc("11:15"), end: pc("12:00"), early: 5, routine: "vanlig", repeat: false, example: true },
+    { id: "e3", title: "Jobb", place: "jobbet", date: d2, start: pc("09:00"), end: pc("16:00"), early: 5, routine: "vanlig", repeat: true, example: true },
+    { id: "e4", title: "Föreläsning", place: "skolan", date: d3, start: pc("10:15"), end: pc("12:00"), early: 10, routine: "snabb", repeat: false, example: true },
+  ];
+  if (sat) events.push({ id: "e5", title: "Träning", place: "gymmet", date: sat, start: pc("10:00"), end: pc("11:30"), early: 0, routine: "snabb", repeat: false, example: true });
+  return {
+    settings: {
+      speed: "normal", customKmh: 5, safety: "saker", snooze: 5, theme: "dark",
+      routines: {
+        vanlig: [["Dusch", 12], ["Klä på dig", 8], ["Frukost", 15], ["Tänder och packning", 10]],
+        snabb: [["Klä på dig", 6], ["Snabb frukost", 8], ["Tänder och packning", 6]],
+      },
+    },
+    home: { mode: "point", x: -264, y: 352, stop: "pal", meters: 550 },
+    places: [
+      { id: "skolan", name: "Skolan", x: 20800, y: 1050, note: "" },
+      { id: "jobbet", name: "Jobbet", x: 21300, y: -1100, note: "" },
+      { id: "biblioteket", name: "Biblioteket", x: 20300, y: -150, note: "" },
+      { id: "gymmet", name: "Gymmet", x: 19150, y: 450, note: "" },
+    ],
+    events,
+  };
+}
+function loadState() { try { const v = localStorage.getItem(KEY); return v ? JSON.parse(v) : null; } catch { return null; } }
+function saveState() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch {} }
+let S = loadState() || seed();
+const ui = {
+  tab: "idag", viewDate: null, disturb: "none", expanded: null, armed: null, sim: null, alarm: null,
+  resa: { from: "hem", to: "skolan", date: null, time: "08:15", open: null }, mapArea: "hem", mapEdit: null, sheet: null,
+};
 
-const $ = id => document.getElementById(id);
-const inputs = ["arrive", "ride", "walkFrom", "walkTo"];
-let routine = load("busslarm.routine", DEFAULT_ROUTINE);
-const saved = load("busslarm.trip", null);
-if (saved) inputs.forEach(id => { if (saved[id] != null) $(id).value = saved[id]; });
+// ---------- Geometry and walking ----------
+const kmh = () => ({ lugn: 4.5, normal: 5.5, snabb: 6.5 }[S.settings.speed] ?? Math.min(15, Math.max(2, Number(S.settings.customKmh) || 5)));
+const speedMs = () => kmh() / 3.6;
+const walkM = (a, b) => Math.round(Math.hypot(a.x - b.x, a.y - b.y) * DETOUR / 10) * 10;
+const walkS = m => Math.round(m / speedMs());
+const areaOf = p => (p.x > 10000 ? "stan" : "hem");
+function place(id) {
+  if (id === "hem") return { id: "hem", name: "Hem", x: S.home.x, y: S.home.y };
+  return S.places.find(p => p.id === id) || null;
+}
+function originOf(id) {
+  if (id === "hem" && S.home.mode === "stop") return { id, stopOnly: S.home.stop, meters: Number(S.home.meters) || 0 };
+  const p = place(id);
+  return p ? { id, x: p.x, y: p.y } : null;
+}
+function nearStops(o, limit = 1500) {
+  if (o.stopOnly) return [{ stop: o.stopOnly, m: o.meters }];
+  return Object.keys(STOPS).map(s => ({ stop: s, m: walkM(o, STOPS[s]) })).filter(r => r.m <= limit).sort((a, b) => a.m - b.m);
+}
+const NEAR = {};
+for (const a in STOPS) NEAR[a] = Object.keys(STOPS).map(b => [b, a === b ? 0 : walkM(STOPS[a], STOPS[b])]).filter(([, m]) => m <= 600);
 
-function renderRoutine() {
-  const box = $("routine");
-  box.innerHTML = "";
-  routine.forEach(([name, min], i) => {
-    const row = document.createElement("div");
-    row.className = "routine-row";
-    row.innerHTML = `<input id="step-name-${i}" aria-label="Moment" value="">
-      <input id="step-min-${i}" type="number" min="0" max="180" aria-label="Minuter" value="${min}">
-      <button type="button" aria-label="Ta bort ${name}">✕</button>`;
-    row.children[0].value = name;
-    row.children[0].addEventListener("input", e => { routine[i][0] = e.target.value; save(); plan(); });
-    row.children[1].addEventListener("input", e => { routine[i][1] = Math.max(0, Number(e.target.value) || 0); save(); plan(); });
-    row.children[2].addEventListener("click", () => { routine.splice(i, 1); save(); renderRoutine(); plan(); });
-    box.appendChild(row);
+// ---------- Journey planner ----------
+const active = (t, dt) => t.days === "alla" || (t.days === "vardag" && dt === "vardag");
+function lateFor(leg, safety) {
+  if (leg.hist) return leg.hist.q(SAFETY[safety].q);
+  return UNKNOWN_LATE[LINES[leg.trip.line].kind][safety];
+}
+
+// Search backwards from the arrival target: every way to get there with at most one change,
+// then keep the ones whose late case still makes it, ranked by how late you can leave.
+function planTrip({ from, to, target, earliest = null, date, safety = S.settings.safety, exclude = null, probe = false }) {
+  const o = originOf(from), d = originOf(to);
+  if (!o || !d) return { options: [], tooLate: null, earliestArrival: null };
+  const dt = dayType(date);
+  const oMap = new Map(nearStops(o).map(r => [r.stop, r.m]));
+  const dMap = new Map((d.stopOnly ? [{ stop: d.stopOnly, m: d.meters }] : nearStops(d)).map(r => [r.stop, r.m]));
+  const lo = (earliest ?? target - 4 * 3600) - 30 * 60;
+  const cands = [];
+  for (const A of TRIPS) {
+    if (!active(A, dt) || exclude?.has(A.id)) continue;
+    for (let i = 0; i < A.stops.length - 1; i++) {
+      const wo = oMap.get(A.stops[i]);
+      if (wo == null) continue;
+      const dep = A.times[i];
+      if (dep > target || dep < lo) continue;
+      for (let j = i + 1; j < A.stops.length; j++) {
+        const s = A.stops[j];
+        const leg1 = { trip: A, i, j };
+        const wd = dMap.get(s);
+        if (wd != null) cands.push({ legs: [leg1], wo, wd, tr: [] });
+        for (const [y, tm] of NEAR[s]) {
+          const seen = new Map();
+          for (const { t: B, i: k } of BY_STOP[y]) {
+            const bd = B.times[k];
+            if (bd > target) break;
+            if (B.line === A.line || !active(B, dt) || exclude?.has(B.id)) continue;
+            if (bd < A.times[j] + walkS(tm) + MIN_TRANSFER) continue;
+            const key = B.line + B.dir, c = seen.get(key) || 0;
+            if (c >= 2) continue;
+            seen.set(key, c + 1);
+            for (let l = k + 1; l < B.stops.length; l++) {
+              const wd2 = dMap.get(B.stops[l]);
+              if (wd2 != null) cands.push({ legs: [leg1, { trip: B, i: k, j: l }], wo, wd: wd2, tr: [tm] });
+            }
+          }
+        }
+      }
+    }
+  }
+  const evald = cands.map(c => evaluate(c, { target, earliest, dt, safety }));
+  if (!o.stopOnly && !d.stopOnly) {
+    const m = walkM(o, d);
+    if (m <= 3000) {
+      const leave = target - walkS(m);
+      evald.push({ key: "walk", walkOnly: true, walkM: m, legs: [], leave, final: target, typical: target, ok: earliest == null || leave >= earliest, fail: earliest != null && leave < earliest ? "tidigt" : null, transfers: 0, totalWalk: m, risk: "walk" });
+    }
+  }
+  const rank = (a, b) => b.leave - a.leave || a.transfers - b.transfers || a.totalWalk - b.totalWalk || a.final - b.final;
+  const best = new Map();
+  for (const e of evald.filter(e => e.ok).sort(rank)) if (!best.has(e.key)) best.set(e.key, e);
+  const options = [...best.values()].slice(0, 4);
+  const topLeave = options[0]?.leave ?? -Infinity;
+  const tooLate = evald.filter(e => !e.ok && e.fail !== "tidigt" && e.leave > topLeave && !best.has(e.key))
+    .sort((a, b) => a.leave - b.leave || a.transfers - b.transfers)[0] || null;
+  let earliestArrival = null;
+  if (!options.length && earliest != null && !probe) {
+    const later = planTrip({ from, to, target: earliest + 4 * 3600, earliest, date, safety, exclude, probe: true });
+    earliestArrival = later.options.length ? Math.min(...later.options.map(x => x.final)) : null;
+  }
+  return { options, tooLate, earliestArrival, target };
+}
+
+function evaluate(c, { target, earliest, dt, safety }) {
+  const legs = c.legs.map(({ trip, i, j }) => ({
+    trip, line: trip.line, from: trip.stops[i], to: trip.stops[j], dep: trip.times[i], arr: trip.times[j],
+    hist: dt === "vardag" && i === 0 ? HIST[trip.id] || null : null,
+  }));
+  const L0 = legs[0], last = legs[legs.length - 1];
+  const atStop = L0.hist ? Math.floor((L0.dep + L0.hist.min - STOP_SLACK) / 60) * 60 : L0.dep - NO_DATA_EARLY;
+  const leave = atStop - walkS(c.wo);
+  // Check a run where each bus is as late as the safety level allows.
+  const run = delays => {
+    for (let k = 0; k < legs.length - 1; k++) {
+      if (legs[k].arr + delays[k] + walkS(c.tr[k]) + MIN_TRANSFER > legs[k + 1].dep) return { ok: false, why: "byte", at: k };
+    }
+    const final = last.arr + delays[legs.length - 1] + walkS(c.wd);
+    return { ok: final <= target, why: final <= target ? null : "sent", final };
+  };
+  const plan = run(legs.map(l => lateFor(l, safety)));
+  const typ = run(legs.map(l => (l.hist ? l.hist.median : 0)));
+  let ok = plan.ok, fail = plan.why;
+  if (earliest != null && leave < earliest) { ok = false; fail = "tidigt"; }
+  let stats = null;
+  const h = legs.find(l => l.hist)?.hist;
+  if (h) {
+    const days = h.rows.map(([date], idx) => {
+      const r = run(legs.map(l => (l.hist ? l.hist.rows[idx][1] : 0)));
+      return { date, ok: r.ok, dep: L0.dep + (L0.hist ? L0.hist.rows[idx][1] : 0) };
+    });
+    stats = { days, ok: days.filter(x => x.ok).length, n: days.length };
+  }
+  const ratio = stats ? stats.ok / stats.n : null;
+  const risk = stats ? (ratio >= 0.95 ? "low" : ratio >= 0.8 ? "mid" : "high") : "unk";
+  const totalWalk = c.wo + c.wd + c.tr.reduce((a, b) => a + b, 0);
+  return {
+    key: `${L0.trip.id}@${L0.from}`, legs, wo: c.wo, wd: c.wd, tr: c.tr, atStop, leave,
+    final: plan.final ?? (last.arr + lateFor(last, safety) + walkS(c.wd)), typical: typ.final ?? last.arr + walkS(c.wd),
+    timetable: last.arr + walkS(c.wd), ok, fail, stats, risk, transfers: legs.length - 1, totalWalk,
+    wait: (L0.hist ? L0.dep + L0.hist.median : L0.dep) - atStop,
+  };
+}
+
+// ---------- Day plans ----------
+function eventsOn(date) {
+  const dow = dateOf(date).getDay();
+  return S.events.filter(e => e.date === date || (e.repeat && date >= e.date && dateOf(e.date).getDay() === dow)).sort((a, b) => a.start - b.start);
+}
+const routineSec = name => (S.settings.routines[name] || []).reduce((s, [, m]) => s + (Number(m) || 0) * 60, 0);
+function dayPlan(date, exclude = null) {
+  const events = eventsOn(date);
+  const segs = [];
+  let from = "hem", earliest = null;
+  for (const ev of events) {
+    const target = ev.start - ev.early * 60;
+    if (ev.place === from) {
+      segs.push({ ev, from, same: true, target });
+    } else {
+      const res = planTrip({ from, to: ev.place, target, earliest, date, exclude });
+      const chosen = res.options.find(o => o.key === ev.choice) || res.options[0] || null;
+      segs.push({ ev, from, res, chosen, target, gap: earliest != null && chosen ? chosen.leave - earliest : null });
+    }
+    from = ev.place; earliest = ev.end;
+  }
+  let wake = null, routine = 0;
+  if (segs.length) {
+    const s0 = segs[0];
+    routine = routineSec(s0.ev.routine);
+    const leave0 = s0.same ? s0.target : s0.chosen?.leave;
+    if (leave0 != null) wake = leave0 - routine;
+  }
+  return { date, events, segs, wake, routine };
+}
+function defaultViewDate() {
+  const t = todayIso();
+  const p = dayPlan(t);
+  if (p.wake != null && nowSec() < p.segs[0].ev.start) return t;
+  for (let i = 1; i < 7; i++) if (eventsOn(addDays(t, i)).length) return addDays(t, i);
+  return addDays(t, 1);
+}
+
+// ---------- Rendering helpers ----------
+const chip = line => `<span class="chip c-${esc(line)}">${esc(line)}</span>`;
+const stopName = s => STOPS[s]?.name || s;
+const placeName = id => place(id)?.name || "Okänd plats";
+const riskText = { low: "Låg risk", mid: "Medelrisk", high: "Hög risk", unk: "Okänd risk", walk: "Bara gång" };
+function ticks(stats, mini = false) {
+  if (!stats) return "";
+  return `<div class="ticks${mini ? " mini" : ""}" aria-hidden="true">${stats.days.map(d => {
+    const mon = dateOf(d.date).getDay() === 1;
+    return `<span class="tick${d.ok ? "" : " fail"}${mon ? " mon" : ""}" title="${esc(d.date)}: bussen gick ${fmt(d.dep, true)}${d.ok ? "" : ", hade missat"}"></span>`;
+  }).join("")}</div>`;
+}
+function riskLine(o) {
+  if (o.walkOnly) return "Ingen buss, ingen förseningsrisk.";
+  if (o.stats) return `Hade fungerat <b>${o.stats.ok} av ${o.stats.n}</b> vardagsmorgnar (29 sep–23 okt).${o.legs.length > 1 ? " Bussen efter bytet antas gå enligt tidtabell." : ""}`;
+  return `Ingen historik för de här avgångarna. Appen räknar med att ${o.legs.length > 1 ? "varje buss" : "bussen"} kan vara ${durMin(lateFor(o.legs[o.legs.length - 1], S.settings.safety))} sen.`;
+}
+
+function optRow(o, { rec = false, sel = false, wakeFrom = null, target } = {}) {
+  const legs = o.walkOnly ? `<span>Gå hela vägen · ${o.walkM} m</span>`
+    : o.legs.map((l, k) => `${k ? '<span aria-hidden="true">→</span>' : ""}${chip(l.line)} <span>${fmt(l.dep)}</span>`).join(" ");
+  const sub = o.walkOnly ? `${dur(walkS(o.walkM))} i ${kmh().toString().replace(".", ",")} km/h`
+    : `${esc(stopName(o.legs[0].from))}${o.legs.length > 1 ? `, byte vid ${esc(stopName(o.legs[0].to))}` : ""} · totalt ${o.totalWalk} m gång · väntar ca ${dur(o.wait)}`;
+  const arrive = `Framme senast ${fmt(o.final)}${target != null ? ` · ${durMin(target - o.final)} tillgodo` : ""}`;
+  const big = wakeFrom != null ? `${fmt(o.leave - wakeFrom)}<small>vakna</small>` : `${fmt(o.leave)}<small>gå</small>`;
+  return `<button type="button" class="opt${rec ? " rec" : ""}${sel ? " sel" : ""}" data-opt="${esc(o.key)}">
+    <span class="big">${big}</span>
+    <span class="mid"><span class="legs">${legs}</span><span class="sub">${wakeFrom != null ? `Gå ${fmt(o.leave)} · ` : ""}${sub}</span><span class="sub">${arrive}</span></span>
+    <span class="side">${rec ? '<span class="tag">Bäst</span>' : ""}${o.stats ? ticks(o.stats, true) + `<span>${o.stats.ok}/${o.stats.n}</span>` : `<span>${riskText[o.risk]}</span>`}</span>
+  </button>`;
+}
+function tooLateRow(o, wakeFrom = null) {
+  const why = o.fail === "byte" ? "Bytet går inte ihop en sen morgon" : `Hinner inte en sen morgon (framme ${fmt(o.final)})`;
+  const big = wakeFrom != null ? `${fmt(o.leave - wakeFrom)}<small>vakna</small>` : `${fmt(o.leave)}<small>gå</small>`;
+  const legs = o.legs.map((l, k) => `${k ? "→" : ""}${chip(l.line)} <span>${fmt(l.dep)}</span>`).join(" ");
+  return `<div class="opt no"><span class="big">${big}</span><span class="mid"><span class="legs">${legs}</span><span class="sub warn">${why}</span><span class="sub">Enligt tidtabellen framme ${fmt(o.timetable)}</span></span><span class="side"></span></div>`;
+}
+
+// Line-map rows for one day.
+function lmRows(p, { live = null } = {}) {
+  const rows = [];
+  const row = (t, what, det, seg = "", node = "", style = "", tSmall = "") =>
+    rows.push(`<li class="${seg} ${node}" style="${style}"><span class="t">${t}${tSmall ? `<small>${tSmall}</small>` : ""}</span><span class="rail"><span class="dot"></span></span><span class="body"><span class="what">${what}</span>${det ? `<br><span class="det">${det}</span>` : ""}</span></li>`);
+  p.segs.forEach((s, idx) => {
+    if (idx === 0 && p.wake != null) {
+      const r = S.settings.routines[s.ev.routine] || [];
+      row(fmt(p.wake), "Vakna", `${s.ev.routine === "snabb" ? "Snabb" : "Vanlig"} rutin, ${durMin(p.routine)}: ${r.map(x => esc(x[0])).join(", ")}`, "s-routine", "n-wake");
+    }
+    if (s.same) {
+      row(fmt(s.ev.start), esc(s.ev.title), `${esc(placeName(s.ev.place))} · till ${fmt(s.ev.end)} · ingen resa`, "s-event", "n-event");
+      return;
+    }
+    const o = s.chosen;
+    const fromName = s.from === "hem" ? "Gå hemifrån" : `Lämna ${esc(placeName(s.from))}`;
+    if (!o) {
+      const ea = s.res.earliestArrival;
+      row(fmt(s.target), `Går inte ihop: ${esc(s.ev.title)}`, ea != null ? `Tidigaste ankomst ${fmt(ea)}, ${durMin(ea - s.target)} för sent. Flytta händelsen eller välj en annan plats.` : "Ingen resa hittades den dagen.", "s-event", "n-bad");
+      row(fmt(s.ev.start), esc(s.ev.title), `${esc(placeName(s.ev.place))} · till ${fmt(s.ev.end)}`, "s-event", "n-event");
+      return;
+    }
+    const gap = s.gap != null && s.gap > 120 ? ` · ${durMin(s.gap)} över efter förra` : "";
+    if (o.walkOnly) {
+      row(fmt(o.leave), fromName, `Gå ${o.walkM} m · ${dur(walkS(o.walkM))}${gap}`, "s-walk");
+    } else {
+      const lv = live && idx === 0 ? live.leave : o.leave;
+      row(fmt(lv), fromName, `${o.wo} m till ${esc(stopName(o.legs[0].from))} · ${dur(walkS(o.wo))}${gap}`, "s-walk");
+      o.legs.forEach((l, k) => {
+        const lc = `--lc: var(--l${l.line.toLowerCase()})`;
+        if (k === 0) {
+          const usual = l.hist ? `brukar gå ${fmt(l.dep + l.hist.median)}` : "tidtabell, ingen historik";
+          row(fmt(o.atStop), esc(stopName(l.from)), `${chip(l.line)} ${fmt(l.dep)} · ${usual} · väntar ca ${dur(o.wait)}`, "s-bus", "", lc);
+        } else {
+          row(fmt(l.dep), `Byt vid ${esc(stopName(l.from))}`, `${chip(l.line)} ${fmt(l.dep)}${o.tr[k - 1] ? ` · gå ${o.tr[k - 1]} m` : ""}`, "s-bus", "", lc);
+        }
+      });
+      const L = o.legs[o.legs.length - 1];
+      const usualArr = L.arr + (o.legs.some(l => l.hist) && o.legs.length === 1 ? L.hist.median : 0);
+      row(fmt(usualArr), `Kliv av vid ${esc(stopName(L.to))}`, `${o.wd} m kvar · ${dur(walkS(o.wd))}`, "s-walk", "", "", "brukar");
+    }
+    row(fmt(o.final), `Framme vid ${esc(placeName(s.ev.place))}`, `Senast, räknat på en ${S.settings.safety === "vanlig" ? "vanlig" : "sen"} morgon · mål ${fmt(s.target)}, ${durMin(s.target - o.final)} tillgodo`, "s-event", "", "", "senast");
+    row(fmt(s.ev.start), esc(s.ev.title), `Till ${fmt(s.ev.end)}`, "s-event", "n-event");
+  });
+  return `<ol class="lm">${rows.join("")}</ol>`;
+}
+
+function chart(o) {
+  const L = o?.legs?.[0];
+  if (!L || !L.hist) return "";
+  const dep = L.dep, h = L.hist;
+  const W = 400, H = 120, pl = 12, pr = 12;
+  const lo = dep - 150, hi = dep + 960;
+  const x = s => pl + (s - lo) / (hi - lo) * (W - pl - pr);
+  let g = "";
+  for (let m = Math.ceil(lo / 120) * 2; m * 60 <= hi; m += 2) {
+    g += `<line class="grid" x1="${x(m * 60)}" x2="${x(m * 60)}" y1="22" y2="88"/><text x="${x(m * 60)}" y="106" text-anchor="middle">${fmt(m * 60)}</text>`;
+  }
+  g += `<line class="tt" x1="${x(dep)}" x2="${x(dep)}" y1="12" y2="92" stroke-width="1.5"/><text x="${x(dep) + 4}" y="14">tidtabell</text>`;
+  g += `<line class="you" x1="${x(o.atStop)}" x2="${x(o.atStop)}" y1="22" y2="88" stroke-width="2.5"/>`;
+  const stack = {};
+  for (const [day, d] of h.rows) {
+    const k = Math.round(d / 20);
+    stack[k] = (stack[k] || 0) + 1;
+    const mon = dateOf(day).getDay() === 1;
+    g += `<circle class="pt${mon ? " mon" : ""}" cx="${x(dep + d)}" cy="${80 - (stack[k] - 1) * 11}" r="4.5"><title>${day}: ${fmt(dep + d, true)}</title></circle>`;
+  }
+  return `<div class="chart-wrap"><svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="När ${L.line} ${fmt(dep)} faktiskt gick, 19 morgnar">${g}</svg></div>
+  <div class="legend"><span style="--c: var(--ink)">Avgång</span><span style="--c: var(--bad)">Måndag</span><span style="--c: var(--amber)">Du vid hållplatsen ${fmt(o.atStop)}</span></div>
+  <p class="note">Tidigast ${fmt(dep + h.min, true)}, oftast ${fmt(dep + h.median, true)}, 9 av 10 senast ${fmt(dep + h.q(0.9), true)}. Båda stora avvikelserna (+7 och +15 min) var måndagar, men 2 av 4 måndagar räcker inte för en slutsats.</p>`;
+}
+
+// ---------- Today ----------
+function viewIdag() {
+  const date = ui.viewDate || (ui.viewDate = defaultViewDate());
+  const exclude = ui.disturb === "cancel" ? cancelSet(date) : null;
+  const p = dayPlan(date, exclude);
+  const s0 = p.segs[0];
+  const o = s0?.chosen;
+  const t = todayIso();
+  const idx = Math.round((dateOf(date) - dateOf(t)) / 864e5);
+  let h = `<div class="dayhead">
+    <span class="label">${esc(dayName(date))}</span>
+    <button class="iconbtn" type="button" data-act="day" data-d="-1" aria-label="Föregående dag" ${idx <= 0 ? "disabled" : ""}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <button class="iconbtn" type="button" data-act="day" data-d="1" aria-label="Nästa dag" ${idx >= 6 ? "disabled" : ""}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg></button>
+  </div>`;
+  if (!p.events.length) {
+    return h + `<div class="wake none">--:--</div><p class="wake-sub">Inget inplanerat, inget larm.</p>
+      <div class="row"><button class="btn primary" type="button" data-act="newev" data-date="${date}">Lägg till händelse</button></div>`;
+  }
+  if (ui.sim) h += morningPanel();
+  h += `<div class="wake num${p.wake == null ? " none" : ""}">${p.wake == null ? "--:--" : fmt(p.wake)}</div>
+    <p class="wake-sub">Vakna för <b>${esc(p.events[0].title)}</b> ${fmt(p.events[0].start)} · ${esc(placeName(p.events[0].place))}</p>`;
+  if (ui.disturb === "cancel" && o) h += `<p class="warn">Simulerat: ${esc(cancelledLabel(date))} är inställd. Planen ovan är omräknad.</p>`;
+  if (o && !o.walkOnly) {
+    const L = o.legs[0];
+    if (L.hist) {
+      const tt = Math.floor((L.dep - 300) / 60) * 60;
+      h += `<p class="gain">Du sover <b>${durMin(o.atStop - tt)} längre</b> än om du stått vid hållplatsen 5 min före tidtabellen, och väntar oftast <b>${dur(o.wait)}</b> i stället för ${dur(L.dep + L.hist.median - tt)}.</p>`;
+    }
+  }
+  const armedHere = ui.armed && ui.armed.date === date;
+  h += `<div class="row">
+      <button class="btn primary" type="button" data-act="arm" ${p.wake == null ? "disabled" : ""}>${armedHere ? "Stäng av larmet" : "Aktivera larm"}</button>
+      <button class="btn" type="button" data-act="sim" ${p.wake == null || !o ? "disabled" : ""}>${ui.sim ? "Avsluta uppspelning" : "Spela upp morgonen"}</button>
+    </div>
+    <p class="${armedHere ? "armed" : "note"}" id="armStatus">${armStatus(date, p)}</p>
+    <div class="block"><h2>Dagen</h2>${lmRows(p, { live: ui.sim?.live })}</div>`;
+  if (o) {
+    h += `<div class="block"><div class="riskhead"><h2>Risk</h2><span class="risk ${o.risk === "walk" ? "low" : o.risk}">${riskText[o.risk]}</span></div>
+      ${ticks(o.stats)}<p class="note">${riskLine(o)} Säkerhetsnivå: <button class="link" type="button" data-act="settings">${SAFETY[S.settings.safety].name}</button>.</p></div>`;
+    if (o.legs[0]?.hist) h += `<div class="block"><h2>Så brukar ${esc(o.legs[0].line)} ${fmt(o.legs[0].dep)} gå</h2>${chart(o)}</div>`;
+    const alts = s0.res.options;
+    h += `<div class="block"><h2>Andra sätt att åka</h2><div class="opts">${alts.map((a, i) => optRow(a, { rec: i === 0, sel: a.key === o.key, wakeFrom: p.routine, target: s0.target })).join("")}${s0.res.tooLate ? tooLateRow(s0.res.tooLate, p.routine) : ""}</div>
+      <p class="note">Tryck på ett alternativ för att välja det för den här händelsen.</p></div>`;
+  }
+  h += `<div class="block"><h2>Testa en störning</h2>
+    <div class="seg" role="group" aria-label="Simulerad störning">
+      ${[["none", "Ingen"], ["late", "Bussen +8 min"], ["cancel", "Inställd tur"]].map(([k, n]) => `<button type="button" data-act="disturb" data-k="${k}" aria-pressed="${ui.disturb === k}">${n}</button>`).join("")}
+    </div>
+    <p class="note">${disturbText(o)}</p></div>`;
+  return h;
+}
+function cancelSet(date) {
+  const p = dayPlan(date);
+  const o = p.segs[0]?.chosen;
+  return o && !o.walkOnly ? new Set([o.legs[0].trip.id]) : null;
+}
+function cancelledLabel(date) {
+  const id = [...(cancelSet(date) || [])][0];
+  const t = TRIP_BY_ID[id];
+  return t ? `${t.line} ${fmt(t.times[0])}` : "Bussen";
+}
+function disturbText(o) {
+  if (ui.disturb === "late") return "Realtid finns först när bussen har börjat sin tur. Vid väckningen vet appen därför oftast inget än. När det är dags att gå säger den till om bussen är sen, så att du kan gå senare. Spela upp morgonen för att se det.";
+  if (ui.disturb === "cancel") return "SL meddelar inställda turer i förväg. Appen kollar 30 min före väckningen och väcker dig tidigare om din buss är inställd.";
+  return "Välj en störning för att se hur appen reagerar. I fas B kommer det från SL:s realtid och störningsinformation.";
+}
+function armStatus(date, p) {
+  if (ui.armed && ui.armed.date === date) {
+    const left = ui.armed.at - Date.now();
+    if (left <= 0) return "Larmet ringer.";
+    return `Larmet är på och ringer ${fmt(ui.armed.wake)}, om ${dur(left / 1000)}. Ha sidan öppen och skärmen tänd.`;
+  }
+  return "Larmet ringer bara medan sidan är öppen och skärmen är tänd. Ett riktigt larm kräver den installerade appen.";
+}
+
+// ---------- Morning playback ----------
+function startSim() {
+  const date = ui.viewDate;
+  const exclude = ui.disturb === "cancel" ? cancelSet(date) : null;
+  const p = dayPlan(date, exclude);
+  const o = p.segs[0].chosen;
+  const L = o.walkOnly ? null : o.legs[0];
+  const busDelay = L ? (L.hist ? L.hist.median : 0) + (ui.disturb === "late" ? 480 : 0) : 0;
+  ui.sim = {
+    date, p, o, L, startReal: Date.now(), startSim: p.wake - 90, speed: 60, paused: false, offset: 0,
+    wake: p.wake, snoozes: 0, rang: false, log: [], said: new Set(), busDelay, live: null, done: false,
+  };
+  ui.sim.log.push(`${fmt(p.wake - 90)} Uppspelning startar, 1 sekund = 1 minut.`);
+  render();
+}
+function simNow() {
+  const s = ui.sim;
+  if (!s) return 0;
+  return s.startSim + s.offset + (s.paused ? 0 : (Date.now() - s.startReal) / 1000 * s.speed);
+}
+function pauseSim(on) {
+  const s = ui.sim;
+  if (!s || s.paused === on) return;
+  if (on) { s.offset += (Date.now() - s.startReal) / 1000 * s.speed; s.paused = true; }
+  else { s.startReal = Date.now(); s.paused = false; }
+}
+function simStep() {
+  const s = ui.sim;
+  if (!s || s.done) return;
+  const t = simNow();
+  const say = (k, msg) => { if (!s.said.has(k)) { s.said.add(k); s.log.unshift(`${fmt(t)} ${msg}`); } };
+  if (!s.rang && t >= s.wake) {
+    s.rang = true; pauseSim(true);
+    showAlarm({ sim: true });
+  }
+  const o = s.o, L = s.L;
+  if (L) {
+    const realDep = L.dep + s.busDelay;
+    const extra = Math.max(0, s.busDelay - (L.hist ? L.hist.median : 0));
+    const known = t >= L.dep - 20 * 60;
+    const leave = known && extra > 60 ? o.leave + extra - 60 : o.leave;
+    s.live = known && extra > 60 ? { leave } : null;
+    if (known && extra > 60) say("late", `Bussen är ${durMin(extra)} sen. Gå ${fmt(leave)} i stället för ${fmt(o.leave)}.`);
+    if (t >= leave - 300) say("go5", "Gå hemifrån om 5 min.");
+    if (t >= leave) say("go", "Gå nu.");
+    if (t >= realDep) say("bus", `${L.line} gick ${fmt(realDep, true)}.`);
+    if (t >= o.legs[o.legs.length - 1].arr + s.busDelay + walkS(o.wd)) { say("fram", "Framme."); s.done = true; pauseSim(true); }
+  } else {
+    if (t >= o.leave - 300) say("go5", "Gå om 5 min.");
+    if (t >= o.leave) say("go", "Gå nu.");
+    if (t >= o.final) { say("fram", "Framme."); s.done = true; pauseSim(true); }
+  }
+}
+function morningPanel() {
+  const s = ui.sim, t = simNow(), o = s.o, L = s.L;
+  let sayText = "Sover";
+  const leave = s.live?.leave ?? o.leave;
+  if (t >= s.wake) sayText = t < leave - 300 ? `Gå om ${durMin(leave - t)}` : t < leave ? `Gå om ${dur(leave - t)}` : "Gå nu";
+  if (L && t >= leave) sayText = t < L.dep + s.busDelay ? "Mot hållplatsen" : `På ${L.line}`;
+  if (s.done) sayText = "Framme";
+  let track = "";
+  if (L) {
+    const dep = L.dep + s.busDelay, per = 120, n = 6;
+    const away = (dep - t) / per;
+    const pos = Math.max(0, Math.min(1, 1 - away / n));
+    const awayTxt = away > n ? `Bussen har inte börjat sin tur än` : away > 0 ? `Bussen är ${Math.ceil(away)} hållplats${Math.ceil(away) === 1 ? "" : "er"} bort · beräknas ${fmt(dep, true)}` : `Bussen har gått`;
+    track = `<div class="tracker c-${esc(L.line)}"><div class="spread"><span class="label">${chip(L.line)} ${fmt(L.dep)} mot ${esc(stopName(L.from))}</span></div>
+      <div class="track">${Array.from({ length: n + 1 }, (_, i) => `<i class="${i === n ? "here" : ""}" style="left:${(i / n) * 100}%"></i>`).join("")}<b style="left:${pos * 100}%"></b></div>
+      <p class="note">${awayTxt}. Sista hållplatsen är din.</p></div>`;
+  }
+  return `<div class="morning" aria-live="polite">
+    <div class="spread"><span class="label">Uppspelning</span><span class="simclock">${fmt(t, true)}</span></div>
+    <div class="say">${sayText}</div>${track}
+    <ul class="log">${s.log.slice(0, 5).map(x => `<li>${esc(x)}</li>`).join("")}</ul>
+    <div class="row"><button class="btn small" type="button" data-act="simspeed">${s.speed === 60 ? "Snabbare" : "Normal fart"}</button><button class="btn small ghost" type="button" data-act="sim">Avsluta</button></div>
+  </div>`;
+}
+
+// ---------- Alarm screen and sound ----------
+let audioCtx = null, soundTimer = null, wakeLock = null;
+function beep(vol) {
+  const t = audioCtx.currentTime;
+  [[0, 784], [0.18, 988]].forEach(([o, f]) => {
+    const osc = audioCtx.createOscillator(), g = audioCtx.createGain();
+    osc.frequency.value = f;
+    g.gain.setValueAtTime(0.0001, t + o);
+    g.gain.exponentialRampToValueAtTime(vol, t + o + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + o + 0.15);
+    osc.connect(g).connect(audioCtx.destination);
+    osc.start(t + o); osc.stop(t + o + 0.17);
   });
 }
-$("addStep").addEventListener("click", () => { routine.push(["Nytt moment", 5]); save(); renderRoutine(); plan(); });
-inputs.forEach(id => $(id).addEventListener("input", () => { save(); plan(); }));
-function save() {
-  store("busslarm.routine", routine);
-  store("busslarm.trip", Object.fromEntries(inputs.map(id => [id, $(id).value])));
+function unlockAudio() {
+  try { audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)(); audioCtx.resume?.(); } catch { audioCtx = null; }
+}
+function startSound() {
+  stopSound();
+  if (!audioCtx) return;
+  let n = 0;
+  const play = () => { try { beep(Math.min(0.4, 0.02 + n * 0.015)); } catch {} n++; };
+  play();
+  soundTimer = setInterval(play, 1100);
+  try { navigator.vibrate?.([500, 300, 500, 300, 500]); } catch {}
+}
+function stopSound() { clearInterval(soundTimer); soundTimer = null; try { navigator.vibrate?.(0); } catch {} }
+function snoozeInfo(ctx) {
+  const ev = ctx.p.segs[0].ev;
+  const slack = ev.routine === "vanlig" ? routineSec("vanlig") - routineSec("snabb") : 0;
+  const len = Math.max(1, Number(S.settings.snooze) || 5) * 60;
+  const used = ctx.snoozes * len;
+  const left = Math.floor((slack - used) / len);
+  return { len, left: Math.max(0, left), routineLeft: ctx.p.routine - used };
+}
+function showAlarm({ sim }) {
+  const ctx = sim ? ui.sim : ui.armed;
+  ui.alarm = { sim };
+  const o = ctx.p.segs[0].chosen, ev = ctx.p.segs[0].ev;
+  const sn = snoozeInfo(ctx);
+  const nowT = sim ? simNow() : nowSec();
+  const leg = o && !o.walkOnly ? `${o.legs[0].line} ${fmt(o.legs[0].dep)}` : "Gå";
+  $("alarmInner").innerHTML = `<div class="now">${fmt(nowT)}</div>
+    <p class="what"><span>${esc(leg)}</span> · ${esc(ev.title)} ${fmt(ev.start)}</p>
+    <p class="hint">Gå hemifrån ${fmt(o.leave)}. Rutinen har ${durMin(sn.routineLeft)} kvar.</p>
+    <div class="btns">
+      <button class="btn primary" type="button" data-act="alarmoff">Stäng av</button>
+      <button class="btn" type="button" data-act="snooze" ${sn.left ? "" : "disabled"}>${sn.left ? `Snooza ${durMin(sn.len)}` : "Ingen marginal kvar"}</button>
+    </div>
+    <p class="hint">${sn.left ? `${sn.left} snooze kvar. Varje snooze kortar rutinen, bussen är densamma.` : ev.routine === "snabb" ? "Du har redan snabb rutin, så det finns ingen tid att snooza på." : "Rutinen är nere på snabb rutin. Snooza mer och du missar bussen."}</p>`;
+  $("alarm").hidden = false;
+  startSound();
+  $("alarmInner").querySelector("button")?.focus();
+}
+function closeAlarm(snooze) {
+  stopSound();
+  $("alarm").hidden = true;
+  const a = ui.alarm; ui.alarm = null;
+  if (!a) return;
+  const ctx = a.sim ? ui.sim : ui.armed;
+  if (!ctx) return;
+  if (snooze) {
+    const sn = snoozeInfo(ctx);
+    ctx.snoozes++;
+    if (a.sim) { ctx.wake += sn.len; ctx.rang = false; ctx.log.unshift(`${fmt(simNow())} Snooze ${durMin(sn.len)}.`); }
+    else { ctx.at += sn.len * 1000; ctx.wake += sn.len; ctx.rang = false; }
+  } else if (a.sim) {
+    ctx.log.unshift(`${fmt(simNow())} Larmet avstängt. God morgon.`);
+  } else {
+    ui.armed = null;
+    releaseWakeLock();
+  }
+  if (a.sim) pauseSim(false);
+  render();
+}
+async function arm(date) {
+  if (ui.armed && ui.armed.date === date) { ui.armed = null; releaseWakeLock(); render(); return; }
+  unlockAudio();
+  const p = dayPlan(date, ui.disturb === "cancel" ? cancelSet(date) : null);
+  if (p.wake == null) return;
+  const at = dateOf(date); at.setHours(0, 0, 0, 0);
+  const ms = at.getTime() + p.wake * 1000;
+  ui.armed = { date, p, at: ms, wake: p.wake, snoozes: 0, rang: false };
+  try { audioCtx && beep(0.08); } catch {}
+  try { wakeLock = await navigator.wakeLock?.request("screen"); } catch { wakeLock = null; }
+  render();
+}
+function releaseWakeLock() { try { wakeLock?.release(); } catch {} wakeLock = null; }
+
+// ---------- Week ----------
+function viewVecka() {
+  const t = todayIso();
+  let h = `<div class="spread"><h2>Veckan</h2><button class="btn small" type="button" data-act="newev" data-date="${addDays(t, 1)}">Ny händelse</button></div><div>`;
+  for (let i = 0; i < 7; i++) {
+    const date = addDays(t, i);
+    const p = dayPlan(date);
+    const d = dateOf(date);
+    h += `<div class="day"><h3>${DOWL[d.getDay()][0].toUpperCase() + DOWL[d.getDay()].slice(1)} <span>${d.getDate()} ${MON[d.getMonth()]}${i === 0 ? " · idag" : i === 1 ? " · imorgon" : ""}</span></h3>`;
+    if (!p.events.length) {
+      h += `<p class="note">Inget inplanerat. Inget larm.</p>`;
+    } else {
+      const o = p.segs[0].chosen;
+      const bad = p.segs.filter(s => !s.same && !s.chosen);
+      h += `<div class="daysum">${p.wake != null ? `<span class="w">${fmt(p.wake)}</span><span>vakna</span>` : `<span class="warn">Inget larm</span>`}${o && !o.walkOnly ? `<span>·</span>${o.legs.map(l => chip(l.line) + " " + fmt(l.dep)).join(" → ")}` : ""}${o?.stats ? `<span>· ${o.stats.ok}/${o.stats.n}</span>` : ""}<button class="link" type="button" data-act="openday" data-date="${date}">Visa</button></div>`;
+      if (bad.length) h += `<p class="note warn">${bad.map(s => `${esc(s.ev.title)} går inte ihop med tiden innan.`).join(" ")}</p>`;
+      for (const s of p.segs) {
+        const e = s.ev;
+        const tr = s.same ? "Ingen resa" : s.chosen ? (s.chosen.walkOnly ? `Gå ${fmt(s.chosen.leave)}` : `Gå ${fmt(s.chosen.leave)} · ${s.chosen.legs.map(l => l.line).join(" → ")}`) : "Hinner inte";
+        h += `<button class="ev" type="button" data-act="editev" data-id="${esc(e.id)}"><span class="t">${fmt(e.start)}</span><span><span>${esc(e.title)}</span>${e.repeat ? ' <span class="sub">· varje vecka</span>' : ""}<br><span class="sub">${esc(placeName(e.place))} · till ${fmt(e.end)}${e.early ? ` · vill vara där ${e.early} min före` : ""} · ${tr}</span></span></button>`;
+      }
+    }
+    h += `<div><button class="link" type="button" data-act="newev" data-date="${date}">Lägg till</button></div></div>`;
+  }
+  h += `</div>`;
+  if (S.events.some(e => e.example)) h += `<div class="block"><p class="note">Händelserna är exempel så att du ser hur appen räknar. Ändra dem eller ta bort alla.</p><div><button class="btn small ghost" type="button" data-act="clearex">Ta bort exempelhändelser</button></div></div>`;
+  return h;
 }
 
-let current = null;
-
-// Work backwards: latest bus whose late case still arrives in time, then the stop, the walk and the routine.
-function plan() {
-  const arrive = parseClock($("arrive").value || "08:00");
-  const ride = (Number($("ride").value) || 0) * 60;
-  const walkFrom = (Number($("walkFrom").value) || 0) * 60;
-  const walkTo = (Number($("walkTo").value) || 0) * 60;
-  const routineSec = routine.reduce((s, [, m]) => s + (Number(m) || 0) * 60, 0);
-  $("routineTotal").textContent = routineSec / 60;
-
-  const options = DEPARTURES.map(dep => {
-    const hist = HISTORY[dep] ? HISTORY[dep].map(([, d]) => d).sort((a, b) => a - b) : null;
-    const late = hist ? quantile(hist, 0.9) : NO_DATA_LATE;
-    const atStop = hist ? dep + hist[0] - STOP_SLACK : dep - NO_DATA_EARLY;
-    return { dep, hist, late, atStop: Math.floor(atStop / 60) * 60, arriveLate: dep + late + ride + walkFrom };
+function placeOptions(sel) {
+  return [{ id: "hem", name: "Hem" }, ...S.places].map(p => `<option value="${esc(p.id)}" ${p.id === sel ? "selected" : ""}>${esc(p.name)}</option>`).join("");
+}
+function openEventEditor(id, date) {
+  const e = id ? S.events.find(x => x.id === id) : { id: null, title: "", place: S.places[0]?.id || "hem", date: date || addDays(todayIso(), 1), start: pc("08:30"), end: pc("09:30"), early: 10, routine: "vanlig", repeat: false };
+  if (!e) return;
+  openSheet(`<div class="sheet-head"><h2>${id ? "Ändra händelse" : "Ny händelse"}</h2><button class="btn small ghost" type="button" data-act="close">Stäng</button></div>
+    <form id="evForm" class="steps" novalidate>
+      <label class="field" for="ev-title">Vad<input id="ev-title" required maxlength="60" value="${esc(e.title)}" placeholder="Till exempel Prov i matte"></label>
+      <label class="field" for="ev-place">Var<select id="ev-place">${placeOptions(e.place)}</select></label>
+      <div class="grid2">
+        <label class="field" for="ev-date">Dag<input id="ev-date" type="date" value="${esc(e.date)}"></label>
+        <label class="field" for="ev-early">Vara där före (min)<input id="ev-early" type="number" min="0" max="120" step="1" value="${e.early}"></label>
+      </div>
+      <div class="grid2">
+        <label class="field" for="ev-start">Börjar<input id="ev-start" type="time" value="${fmt(e.start)}"></label>
+        <label class="field" for="ev-end">Slutar<input id="ev-end" type="time" value="${fmt(e.end)}"></label>
+      </div>
+      <label class="field" for="ev-routine">Morgonrutin om det är dagens första<select id="ev-routine">
+        <option value="vanlig" ${e.routine === "vanlig" ? "selected" : ""}>Vanlig (${durMin(routineSec("vanlig"))})</option>
+        <option value="snabb" ${e.routine === "snabb" ? "selected" : ""}>Snabb (${durMin(routineSec("snabb"))})</option></select></label>
+      <label class="check" for="ev-repeat"><input id="ev-repeat" type="checkbox" ${e.repeat ? "checked" : ""}> Upprepa varje vecka</label>
+      <p class="note warn" id="ev-err" hidden></p>
+      <div class="row"><button class="btn primary" type="submit">Spara</button>${id ? `<button class="btn danger ghost" type="button" data-act="delev" data-id="${esc(id)}">Ta bort</button>` : ""}</div>
+    </form>`);
+  $("evForm").addEventListener("submit", ev => {
+    ev.preventDefault();
+    const title = $("ev-title").value.trim();
+    const start = $("ev-start").value ? pc($("ev-start").value) : null;
+    const end = $("ev-end").value ? pc($("ev-end").value) : null;
+    const err = $("ev-err");
+    const fail = m => { err.textContent = m; err.hidden = false; };
+    if (!title) return fail("Skriv vad det är.");
+    if (!$("ev-date").value) return fail("Välj en dag.");
+    if (start == null || end == null) return fail("Fyll i när det börjar och slutar.");
+    if (end <= start) return fail("Sluttiden måste vara efter starttiden.");
+    const rec = { title, place: $("ev-place").value, date: $("ev-date").value, start, end, early: Math.max(0, Math.min(120, Number($("ev-early").value) || 0)), routine: $("ev-routine").value, repeat: $("ev-repeat").checked, example: false };
+    if (id) Object.assign(e, rec, { choice: e.place === rec.place && e.start === rec.start && e.early === rec.early ? e.choice : undefined });
+    else S.events.push({ id: "e" + Date.now().toString(36), ...rec });
+    saveState(); closeSheet(); render();
   });
-  const bus = options.filter(o => o.arriveLate <= arrive).pop();
+}
 
-  const tl = $("timeline");
-  tl.innerHTML = "";
-  if (!bus) {
-    current = null;
-    $("wake").textContent = "--.--";
-    $("wakeSub").textContent = "Ingen avgång hinner fram i tid. Ändra när du ska vara framme.";
-    $("why").textContent = "";
-    drawChart(null);
+// ---------- Trip search ----------
+function viewResa() {
+  const r = ui.resa;
+  r.date ||= addDays(todayIso(), 1);
+  const dates = Array.from({ length: 7 }, (_, i) => addDays(todayIso(), i));
+  let h = `<h2>Sök resa</h2>
+    <div class="steps">
+      <div class="grid2">
+        <label class="field" for="r-from">Från<select id="r-from">${placeOptions(r.from)}</select></label>
+        <label class="field" for="r-to">Till<select id="r-to">${placeOptions(r.to)}</select></label>
+      </div>
+      <div class="grid2">
+        <label class="field" for="r-date">Dag<select id="r-date">${dates.map(d => `<option value="${d}" ${d === r.date ? "selected" : ""}>${esc(dayName(d))}</option>`).join("")}</select></label>
+        <label class="field" for="r-time">Framme senast<input id="r-time" type="time" value="${esc(r.time)}"></label>
+      </div>
+      <div class="field"><span>Säkerhet</span><div class="seg" role="group" aria-label="Säkerhetsnivå">${Object.entries(SAFETY).map(([k, v]) => `<button type="button" data-act="safety" data-k="${k}" aria-pressed="${S.settings.safety === k}">${v.name}</button>`).join("")}</div></div>
+      <p class="note">${SAFETY[S.settings.safety].text}</p>
+    </div><div id="resaOut"></div>`;
+  return h;
+}
+function renderResaResults() {
+  const r = ui.resa, out = $("resaOut");
+  if (!out) return;
+  if (r.from === r.to) { out.innerHTML = `<p class="note">Välj två olika platser.</p>`; return; }
+  const target = r.time ? pc(r.time) : null;
+  if (target == null) { out.innerHTML = `<p class="note">Fyll i när du ska vara framme.</p>`; return; }
+  const res = planTrip({ from: r.from, to: r.to, target, date: r.date });
+  const wakeFrom = r.from === "hem" ? routineSec("vanlig") : null;
+  if (!res.options.length) { out.innerHTML = `<div class="block"><p class="warn">Ingen resa hinner fram ${fmt(target)} den dagen.${dayType(r.date) === "helg" ? " På helger går inte 670X." : ""}</p></div>`; return; }
+  let h = `<div class="block"><div class="spread"><h2>Förslag</h2><span class="note">${wakeFrom != null ? `vakna med vanlig rutin, ${durMin(wakeFrom)}` : "sorterat på hur sent du kan gå"}</span></div><div class="opts">`;
+  res.options.forEach((o, i) => {
+    h += optRow(o, { rec: i === 0, sel: r.open === o.key, wakeFrom, target });
+    if (r.open === o.key) h += optDetail(o, r);
+  });
+  if (res.tooLate) h += tooLateRow(res.tooLate, wakeFrom);
+  h += `</div></div>`;
+  out.innerHTML = h;
+}
+function optDetail(o, r) {
+  const fake = { segs: [{ ev: { title: placeName(r.to), place: r.to, start: pc(r.time), end: pc(r.time), routine: "vanlig" }, from: r.from, chosen: o, target: pc(r.time) }], wake: null };
+  let h = `<div class="optdetail">${lmRows(fake).replace(/<li class="s-event n-event"[\s\S]*?<\/li><\/ol>$/, "</ol>")}`;
+  h += `<p class="note">${riskLine(o)}</p>`;
+  const from = place(r.from);
+  if (from && !o.walkOnly && !(r.from === "hem" && S.home.mode === "stop")) h += mapSvg(areaOf(from), { from: r.from, stop: o.legs[0].from });
+  h += `<div class="row"><button class="btn small" type="button" data-act="addtrip" data-key="${esc(o.key)}">Lägg till i veckan</button></div></div>`;
+  return h;
+}
+
+// ---------- Places and map ----------
+function viewPlatser() {
+  const area = ui.mapArea;
+  const list = [{ id: "hem", name: "Hem", x: S.home.x, y: S.home.y, note: "" }, ...S.places].filter(p => areaOf(p) === area);
+  const editing = ui.mapEdit;
+  let h = `<div class="spread"><h2>Platser</h2><div class="seg" role="group" aria-label="Område" style="min-width:12rem">
+      <button type="button" data-act="area" data-k="hem" aria-pressed="${area === "hem"}">Hemma</button><button type="button" data-act="area" data-k="stan" aria-pressed="${area === "stan"}">Stan</button></div></div>`;
+  if (editing) h += `<p class="warn" style="color:var(--amber)">${editing.kind === "home" ? "Tryck på kartan där du bor." : editing.kind === "new" ? `Tryck på kartan där ${esc(editing.name)} ligger.` : "Tryck på kartan för att flytta platsen."} <button class="link" type="button" data-act="cancelmap">Avbryt</button></p>`;
+  h += mapSvg(area, { editing: !!editing });
+  h += `<p class="note">Exempelkarta. I fas B blir det en riktig karta där du söker adresser.</p><ul class="places">`;
+  for (const p of list) {
+    const isHome = p.id === "hem";
+    const ns = isHome && S.home.mode === "stop" ? [{ stop: S.home.stop, m: Number(S.home.meters) || 0 }] : nearStops(p).slice(0, 2);
+    h += `<li><span class="name"><span>${esc(p.name)}</span><span class="row">
+        <button class="link" type="button" data-act="movepl" data-id="${esc(p.id)}">Flytta</button>
+        ${isHome ? "" : `<button class="link" type="button" data-act="delpl" data-id="${esc(p.id)}">Ta bort</button>`}</span></span>
+      ${ns.map(n => `<span class="sub">${esc(stopName(n.stop))} · ${n.m} m · ${dur(walkS(n.m))} · ${[...(LINES_AT[n.stop] || [])].map(chip).join(" ")}</span>`).join("") || `<span class="sub">Ingen hållplats inom 1 500 m.</span>`}
+    </li>`;
+  }
+  h += `</ul>`;
+  if (ui.confirmDel) {
+    const p = place(ui.confirmDel);
+    const used = S.events.filter(e => e.place === ui.confirmDel).length;
+    h += `<div class="block"><p>Ta bort ${esc(p?.name)}?${used ? ` ${used} händelse${used > 1 ? "r" : ""} använder platsen och flyttas till Hem.` : ""}</p><div class="row"><button class="btn danger" type="button" data-act="delplok">Ta bort</button><button class="btn ghost" type="button" data-act="delplno">Avbryt</button></div></div>`;
+  }
+  h += `<div class="block"><h2>Ny plats</h2><div class="row"><input class="inp" id="newPlaceName" maxlength="30" placeholder="Namn, till exempel Simhallen" style="flex:1"><button class="btn" type="button" data-act="newpl">Sätt ut på kartan</button></div></div>`;
+  h += `<div class="block"><h2>Hem</h2>
+    <div class="seg" role="group" aria-label="Hur hemmet anges">
+      <button type="button" data-act="homemode" data-k="point" aria-pressed="${S.home.mode === "point"}">Exakt position</button>
+      <button type="button" data-act="homemode" data-k="stop" aria-pressed="${S.home.mode === "stop"}">Närmaste hållplats</button></div>`;
+  if (S.home.mode === "stop") {
+    h += `<div class="grid2"><label class="field" for="home-stop">Hållplats<select id="home-stop">${Object.entries(STOPS).map(([k, v]) => `<option value="${k}" ${k === S.home.stop ? "selected" : ""}>${esc(v.name)}</option>`).join("")}</select></label>
+      <label class="field" for="home-m">Avstånd (m)<input id="home-m" type="number" min="0" max="3000" step="10" value="${esc(S.home.meters)}"></label></div>
+      <p class="note">${Number(S.home.meters) || 0} m tar ${dur(walkS(Number(S.home.meters) || 0))} i ${String(kmh()).replace(".", ",")} km/h. Appen jämför då bara bussar från den hållplatsen.</p>`;
+  } else {
+    h += `<p class="note">Appen jämför alla hållplatser inom 1 500 m och räknar gångvägen som fågelvägen × 1,25.</p>`;
+  }
+  h += `</div>`;
+  return h;
+}
+
+// Deterministic street grid so the example map looks the same every time.
+function rng(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function mapBounds(area) {
+  const pts = [...Object.values(STOPS), { x: S.home.x, y: S.home.y }, ...S.places].filter(p => areaOf(p) === area);
+  let x0 = Math.min(...pts.map(p => p.x)), x1 = Math.max(...pts.map(p => p.x));
+  let y0 = Math.min(...pts.map(p => p.y)), y1 = Math.max(...pts.map(p => p.y));
+  const size = Math.max(1400, x1 - x0 + 600, y1 - y0 + 600);
+  const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+  return { x0: cx - size / 2, y0: cy - size / 2, size };
+}
+function mapSvg(area, { editing = false, from = null, stop = null } = {}) {
+  const b = mapBounds(area), k = b.size / 360;
+  const X = x => (x - b.x0).toFixed(1), Y = y => (b.y0 + b.size - y).toFixed(1);
+  const r = rng(area === "hem" ? 7 : 19);
+  let streets = "";
+  for (let v = b.x0 + 60; v < b.x0 + b.size; v += 140 + r() * 120) { const s = (r() - .5) * 120; streets += `M${X(v)} ${Y(b.y0)}L${X(v + s)} ${Y(b.y0 + b.size)}`; }
+  for (let v = b.y0 + 60; v < b.y0 + b.size; v += 140 + r() * 120) { const s = (r() - .5) * 120; streets += `M${X(b.x0)} ${Y(v)}L${X(b.x0 + b.size)} ${Y(v + s)}`; }
+  let g = `<rect class="park" x="${X(b.x0 + b.size * .62)}" y="${Y(b.y0 + b.size * .3)}" width="${(b.size * .22).toFixed(0)}" height="${(b.size * .16).toFixed(0)}" rx="${(8 * k).toFixed(0)}"/>`;
+  g += `<path class="street" d="${streets}" stroke-width="${(5 * k).toFixed(1)}"/>`;
+  const drawn = new Set();
+  for (const t of TRIPS) {
+    const key = t.line + t.dir;
+    if (drawn.has(key) || drawn.has(t.line + "rev")) continue;
+    drawn.add(key); drawn.add(t.line + "rev");
+    const pts = t.stops.map(s => STOPS[s]);
+    if (!pts.some(p => areaOf(p) === area)) continue;
+    g += `<polyline class="route" points="${pts.map(p => `${X(p.x)},${Y(p.y)}`).join(" ")}" stroke="var(--l${t.line.toLowerCase()})" stroke-width="${(4 * k).toFixed(1)}" opacity=".9"/>`;
+  }
+  const homeArea = areaOf(S.home) === area;
+  const showHome = homeArea && S.home.mode === "point";
+  // Walking lines: from the chosen start to its stop, or from home to every stop nearby.
+  const walkLines = [];
+  if (from) { const p = place(from); if (p && stop) walkLines.push([p, STOPS[stop], true]); }
+  else {
+    if (showHome) for (const n of nearStops(S.home)) walkLines.push([S.home, STOPS[n.stop], false]);
+    for (const p of S.places) if (areaOf(p) === area) { const n = nearStops(p)[0]; if (n) walkLines.push([p, STOPS[n.stop], false]); }
+  }
+  for (const [a, s, hl] of walkLines) {
+    const m = walkM(a, s);
+    g += `<line class="walk${hl ? " hl" : ""}" x1="${X(a.x)}" y1="${Y(a.y)}" x2="${X(s.x)}" y2="${Y(s.y)}" stroke-width="${(2.2 * k).toFixed(1)}" stroke-dasharray="${(2 * k).toFixed(1)} ${(5 * k).toFixed(1)}"/>`;
+    g += `<text class="sub" x="${X((a.x + s.x) / 2)}" y="${Y((a.y + s.y) / 2)}" font-size="${(10.5 * k).toFixed(1)}" stroke-width="${(3 * k).toFixed(1)}" text-anchor="middle">${m} m</text>`;
+  }
+  for (const [id, s] of Object.entries(STOPS)) {
+    if (areaOf(s) !== area) continue;
+    g += `<circle class="stop${id === stop ? " hl" : ""}" cx="${X(s.x)}" cy="${Y(s.y)}" r="${(6 * k).toFixed(1)}" stroke-width="${(2.5 * k).toFixed(1)}"/>`;
+    g += `<text class="lbl" x="${X(s.x + 10 * k)}" y="${Y(s.y - 18 * k)}" font-size="${(12 * k).toFixed(1)}" stroke-width="${(3.5 * k).toFixed(1)}">${esc(s.name)}</text>`;
+    g += `<text class="sub" x="${X(s.x + 10 * k)}" y="${Y(s.y - 31 * k)}" font-size="${(10 * k).toFixed(1)}" stroke-width="${(3 * k).toFixed(1)}">${[...(LINES_AT[id] || [])].join(" · ")}</text>`;
+  }
+  for (const p of S.places) {
+    if (areaOf(p) !== area) continue;
+    const s = 9 * k;
+    g += `<rect class="place" x="${(+X(p.x) - s / 2).toFixed(1)}" y="${(+Y(p.y) - s / 2).toFixed(1)}" width="${s.toFixed(1)}" height="${s.toFixed(1)}" rx="${(1.5 * k).toFixed(1)}"/>`;
+    g += `<text class="lbl" x="${X(p.x + 9 * k)}" y="${Y(p.y + 6 * k)}" font-size="${(12 * k).toFixed(1)}" stroke-width="${(3.5 * k).toFixed(1)}">${esc(p.name)}</text>`;
+  }
+  if (showHome) {
+    const hx = +X(S.home.x), hy = +Y(S.home.y), s = 8 * k;
+    g += `<path class="home" d="M${hx - s} ${hy + s}V${hy - s * .1}L${hx} ${hy - s}L${hx + s} ${hy - s * .1}V${hy + s}Z"/>`;
+    g += `<text class="lbl" x="${(hx + s + 4 * k).toFixed(1)}" y="${(hy + 4 * k).toFixed(1)}" font-size="${(12 * k).toFixed(1)}" stroke-width="${(3.5 * k).toFixed(1)}">Hem</text>`;
+  }
+  const sb = 200, sx = b.size - 20 * k - sb, sy = b.size - 16 * k;
+  g += `<path class="scale" d="M${sx} ${sy - 5 * k}V${sy}H${sx + sb}V${sy - 5 * k}" fill="none" stroke-width="${(1.5 * k).toFixed(1)}"/><text class="sub" x="${sx + sb / 2}" y="${sy - 8 * k}" font-size="${(10 * k).toFixed(1)}" stroke-width="${(3 * k).toFixed(1)}" text-anchor="middle">200 m</text>`;
+  return `<svg class="map${editing ? " editing" : ""}" data-area="${area}" viewBox="0 0 ${b.size.toFixed(0)} ${b.size.toFixed(0)}" role="img" aria-label="Exempelkarta över ${area === "hem" ? "området hemma" : "stan"}">${g}</svg>`;
+}
+function mapClick(ev) {
+  const svg = ev.target.closest("svg.map");
+  if (!svg || !ui.mapEdit) return;
+  const area = svg.dataset.area, b = mapBounds(area);
+  const pt = svg.createSVGPoint(); pt.x = ev.clientX; pt.y = ev.clientY;
+  const m = svg.getScreenCTM();
+  if (!m) return;
+  const q = pt.matrixTransform(m.inverse());
+  const x = Math.round(b.x0 + q.x), y = Math.round(b.y0 + b.size - q.y);
+  const e = ui.mapEdit;
+  if (e.kind === "home") Object.assign(S.home, { x, y, mode: "point" });
+  else if (e.kind === "move") Object.assign(S.places.find(p => p.id === e.id) || {}, { x, y });
+  else if (e.kind === "new") S.places.push({ id: "p" + Date.now().toString(36), name: e.name, x, y, note: "" });
+  ui.mapEdit = null;
+  saveState(); render();
+}
+
+// ---------- Settings ----------
+function openSettings() {
+  const st = S.settings;
+  const steps = name => (st.routines[name] || []).map(([n, m], i) => `<div class="step">
+      <input class="inp" id="rt-${name}-n-${i}" data-rt="${name}" data-i="${i}" data-f="n" value="${esc(n)}" aria-label="Moment">
+      <input class="inp" id="rt-${name}-m-${i}" data-rt="${name}" data-i="${i}" data-f="m" type="number" min="0" max="120" value="${m}" aria-label="Minuter">
+      <button class="x" type="button" data-act="rtdel" data-rt="${name}" data-i="${i}" aria-label="Ta bort ${esc(n)}">✕</button></div>`).join("");
+  openSheet(`<div class="sheet-head"><h2>Inställningar</h2><button class="btn small ghost" type="button" data-act="close">Klar</button></div>
+    <div class="steps"><span class="label">Gånghastighet</span>
+      <div class="seg" role="group" aria-label="Gånghastighet">${[["lugn", "Lugn"], ["normal", "Normal"], ["snabb", "Snabb"], ["egen", "Egen"]].map(([k, n]) => `<button type="button" data-act="speed" data-k="${k}" aria-pressed="${st.speed === k}">${n}</button>`).join("")}</div>
+      ${st.speed === "egen" ? `<label class="field" for="set-kmh">Egen hastighet (km/h)<input id="set-kmh" type="number" min="2" max="15" step="0.1" value="${esc(st.customKmh)}"></label>` : ""}
+      <p class="note" id="speedNote">${String(kmh()).replace(".", ",")} km/h = ${speedMs().toFixed(2).replace(".", ",")} m/s. 500 m tar ${dur(walkS(500))}.</p></div>
+    <div class="steps"><span class="label">Säkerhetsnivå</span>
+      <div class="seg" role="group" aria-label="Säkerhetsnivå">${Object.entries(SAFETY).map(([k, v]) => `<button type="button" data-act="safety" data-k="${k}" aria-pressed="${st.safety === k}">${v.name}</button>`).join("")}</div>
+      <p class="note">${SAFETY[st.safety].text}</p></div>
+    ${["vanlig", "snabb"].map(n => `<div class="steps"><div class="spread"><span class="label">${n === "vanlig" ? "Vanlig" : "Snabb"} rutin</span><span class="note" id="rtsum-${n}">${durMin(routineSec(n))}</span></div>${steps(n)}<div><button class="link" type="button" data-act="rtadd" data-rt="${n}">Lägg till moment</button></div></div>`).join("")}
+    <div class="steps"><span class="label">Snooze</span>
+      <label class="field" for="set-snooze">Längd (min)<input id="set-snooze" type="number" min="1" max="15" value="${esc(st.snooze)}"></label>
+      <p class="note">Snooze tar tid från rutinen, aldrig från bussen. Med vanlig rutin kan du snooza tills den är lika kort som den snabba.</p></div>
+    <div class="steps"><span class="label">Utseende</span>
+      <div class="seg" role="group" aria-label="Tema">${[["dark", "Mörkt"], ["light", "Ljust"], ["system", "Som telefonen"]].map(([k, n]) => `<button type="button" data-act="theme" data-k="${k}" aria-pressed="${st.theme === k}">${n}</button>`).join("")}</div></div>
+    <div class="steps prose"><span class="label">Så räknar appen</span>
+      <p>Appen utgår från när du ska vara framme och räknar baklänges. Den letar resor med högst ett byte och väljer den där du kan gå hemifrån senast, men bara om den hinner fram även en ${st.safety === "vanlig" ? "vanlig" : "sen"} morgon.</p>
+      <p><b>Vid hållplatsen:</b> den tidigaste avgång som setts minus 30 s, avrundat nedåt till hel minut. Utan historik: 1 min före tidtabellen.</p>
+      <p><b>Ankomst:</b> med historik används förseningen för vald säkerhetsnivå. Utan historik antas regionbussar vara ${durMin(UNKNOWN_LATE.regional[st.safety])} sena och stadsbussar ${durMin(UNKNOWN_LATE.city[st.safety])}. Vid byte krävs minst 1 min mellan avstigning och nästa buss.</p>
+      <p><b>Gång:</b> fågelvägen × 1,25 i vald hastighet.</p>
+      <p><b>Riktig data i fas A:</b> 670X:s vardagsavgångar 06:20–07:50 från Pålsundsvägen och 19 morgnar för 07:21 (KoDa, 29 sep–23 okt 2026). Allt annat är exempel. Restiden med 670X är påhittad.</p></div>
+    <div class="steps"><span class="label">Data</span><p class="note">Allt sparas bara i den här webbläsaren.</p>
+      ${ui.confirmReset ? `<div class="row"><button class="btn danger" type="button" data-act="resetok">Ja, återställ allt</button><button class="btn ghost" type="button" data-act="resetno">Avbryt</button></div>` : `<div><button class="btn small ghost" type="button" data-act="reset">Återställ exempeldata</button></div>`}</div>`);
+}
+
+// ---------- Sheet ----------
+function openSheet(html) { $("sheetPanel").innerHTML = html; $("sheet").hidden = false; ui.sheet = true; $("sheetPanel").querySelector("input,select,button")?.focus(); }
+function closeSheet() { $("sheet").hidden = true; ui.sheet = null; ui.confirmReset = false; }
+
+// ---------- Render ----------
+function applyTheme() { document.documentElement.dataset.appTheme = S.settings.theme; }
+function render() {
+  applyTheme();
+  for (const t of ["idag", "vecka", "resa", "platser"]) {
+    $("view-" + t).hidden = ui.tab !== t;
+    document.querySelector(`.tab[data-tab="${t}"]`).setAttribute("aria-current", ui.tab === t ? "page" : "false");
+  }
+  const v = $("view-" + ui.tab);
+  if (ui.tab === "idag") v.innerHTML = viewIdag();
+  if (ui.tab === "vecka") v.innerHTML = viewVecka();
+  if (ui.tab === "resa") { v.innerHTML = viewResa(); renderResaResults(); }
+  if (ui.tab === "platser") v.innerHTML = viewPlatser();
+}
+function tick() {
+  $("clock").textContent = fmt(nowSec());
+  if (ui.armed && !ui.alarm && Date.now() >= ui.armed.at) showAlarm({ sim: false });
+  if (ui.sim) {
+    simStep();
+    if (ui.tab === "idag" && !ui.alarm) {
+      const panel = document.querySelector(".morning");
+      if (panel) { const tmp = document.createElement("div"); tmp.innerHTML = morningPanel(); panel.replaceWith(tmp.firstElementChild); }
+      if (ui.sim.live && !ui.sim.liveShown) { ui.sim.liveShown = true; render(); }
+    }
+  } else if (ui.tab === "idag" && ui.armed) {
+    const el = $("armStatus");
+    if (el) el.textContent = armStatus(ui.viewDate, null);
+  }
+}
+
+// ---------- Events ----------
+document.addEventListener("click", ev => {
+  const tab = ev.target.closest(".tab");
+  if (tab) { ui.tab = tab.dataset.tab; ui.mapEdit = null; render(); window.scrollTo(0, 0); return; }
+  if (ev.target.closest("svg.map.editing")) { mapClick(ev); return; }
+  if (ev.target === $("sheet")) { closeSheet(); return; }
+  const opt = ev.target.closest("button.opt");
+  if (opt) {
+    const key = opt.dataset.opt;
+    if (ui.tab === "idag") {
+      const p = dayPlan(ui.viewDate);
+      const e = p.segs[0]?.ev;
+      if (e) { e.choice = key; saveState(); render(); }
+    } else if (ui.tab === "resa") { ui.resa.open = ui.resa.open === key ? null : key; renderResaResults(); }
     return;
   }
-  const leave = bus.atStop - walkTo;
-  const wake = leave - routineSec;
-  current = { wake, bus };
-
-  const rows = [[arrive, "Framme", "", "key"], [arrive - walkFrom, "Kliver av bussen, senast", `${walkFrom / 60} min gång`, ""],
-    [bus.hist ? bus.dep + bus.hist[Math.floor(bus.hist.length / 2)] : bus.dep,
-      bus.hist ? `670X brukar gå (tidtabell ${fmt(bus.dep)})` : "670X enligt tidtabellen", `${ride / 60} min resa`, "bus-row"],
-    [bus.atStop, "Vid Pålsundsvägen", bus.hist ? "datadriven marginal" : "ingen historik", "key bus-row"],
-    [leave, "Gå hemifrån", `${walkTo / 60} min gång`, "key"]];
-  let t = leave;
-  for (let i = routine.length - 1; i >= 0; i--) {
-    const [name, min] = routine[i];
-    t -= (Number(min) || 0) * 60;
-    rows.push([t, name || "Moment", `${min} min`, ""]);
+  const b = ev.target.closest("[data-act]");
+  if (!b) return;
+  const a = b.dataset.act, d = b.dataset;
+  switch (a) {
+    case "day": {
+      const i = Math.round((dateOf(ui.viewDate) - dateOf(todayIso())) / 864e5) + Number(d.d);
+      ui.viewDate = addDays(todayIso(), Math.max(0, Math.min(6, i)));
+      if (ui.sim) ui.sim = null;
+      ui.disturb = "none"; render(); break;
+    }
+    case "arm": arm(ui.viewDate); break;
+    case "sim": if (ui.sim) { ui.sim = null; render(); } else { unlockAudio(); startSim(); } break;
+    case "simspeed": { const s = ui.sim; pauseSim(true); s.speed = s.speed === 60 ? 240 : 60; pauseSim(false); break; }
+    case "disturb": ui.disturb = d.k; ui.sim = null; render(); break;
+    case "alarmoff": closeAlarm(false); break;
+    case "snooze": closeAlarm(true); break;
+    case "settings": openSettings(); break;
+    case "close": closeSheet(); render(); break;
+    case "newev": openEventEditor(null, d.date); break;
+    case "editev": openEventEditor(d.id); break;
+    case "delev": S.events = S.events.filter(e => e.id !== d.id); saveState(); closeSheet(); render(); break;
+    case "openday": ui.viewDate = d.date; ui.tab = "idag"; ui.disturb = "none"; ui.sim = null; render(); window.scrollTo(0, 0); break;
+    case "clearex": S.events = S.events.filter(e => !e.example); saveState(); render(); break;
+    case "safety": S.settings.safety = d.k; saveState(); render(); if (ui.sheet) openSettings(); break;
+    case "speed": S.settings.speed = d.k; saveState(); openSettings(); render(); break;
+    case "theme": S.settings.theme = d.k; saveState(); applyTheme(); openSettings(); break;
+    case "rtadd": S.settings.routines[d.rt].push(["Nytt moment", 5]); saveState(); openSettings(); break;
+    case "rtdel": S.settings.routines[d.rt].splice(Number(d.i), 1); saveState(); openSettings(); break;
+    case "reset": ui.confirmReset = true; openSettings(); break;
+    case "resetno": ui.confirmReset = false; openSettings(); break;
+    case "resetok": S = seed(); saveState(); ui.confirmReset = false; ui.viewDate = null; ui.armed = null; ui.sim = null; closeSheet(); render(); break;
+    case "area": ui.mapArea = d.k; ui.mapEdit = null; render(); break;
+    case "movepl": ui.mapEdit = d.id === "hem" ? { kind: "home" } : { kind: "move", id: d.id }; ui.mapArea = areaOf(place(d.id)); render(); break;
+    case "cancelmap": ui.mapEdit = null; render(); break;
+    case "newpl": {
+      const name = $("newPlaceName").value.trim();
+      if (!name) { $("newPlaceName").focus(); $("newPlaceName").placeholder = "Skriv ett namn först"; break; }
+      ui.mapEdit = { kind: "new", name }; render(); break;
+    }
+    case "delpl": ui.confirmDel = d.id; render(); break;
+    case "delplno": ui.confirmDel = null; render(); break;
+    case "delplok": {
+      const id = ui.confirmDel;
+      S.events.forEach(e => { if (e.place === id) { e.place = "hem"; e.choice = undefined; } });
+      S.places = S.places.filter(p => p.id !== id);
+      ui.confirmDel = null; saveState(); render(); break;
+    }
+    case "homemode": S.home.mode = d.k; saveState(); render(); break;
+    case "addtrip": {
+      const r = ui.resa;
+      S.events.push({ id: "e" + Date.now().toString(36), title: `Resa till ${placeName(r.to)}`, place: r.to, date: r.date, start: pc(r.time), end: pc(r.time) + 1800, early: 0, routine: "vanlig", repeat: false, choice: d.key });
+      saveState(); b.textContent = "Tillagd i veckan"; b.disabled = true; break;
+    }
   }
-  rows.push([wake, "Väckning", "", "key wake-row"]);
-  for (const [time, what, dur, cls] of rows) {
-    const li = document.createElement("li");
-    li.className = cls;
-    li.innerHTML = `<span class="t">${fmt(time)}</span><span class="what"></span><span class="d"></span>`;
-    li.children[1].textContent = what;
-    li.children[2].textContent = dur;
-    tl.appendChild(li);
-  }
-
-  $("wake").textContent = fmt(wake);
-  $("wakeSub").innerHTML = `Du tar <strong>${fmt(bus.dep)}-bussen</strong> och står vid hållplatsen <span class="num">${fmt(bus.atStop)}</span>.`;
-  if (bus.hist) {
-    const n = bus.hist.length;
-    const schoolMargin = Math.round((arrive - bus.arriveLate) / 60);
-    $("why").textContent = `Under ${n} morgnar gick bussen aldrig tidigare än ${fmt(bus.dep + bus.hist[0], true)}, så ${fmt(bus.atStop)} hade räckt varje gång. ` +
-      `Ankomsten räknas på en sen morgon (9 av 10 morgnar gick bussen senast ${fmt(bus.dep + bus.late, true)}), och då är du ändå framme med ${schoolMargin} min tillgodo. ` +
-      `Med vanliga fem minuters marginal före tidtabellen hade du fått stå där ${fmt(bus.dep - 300)}.`;
-  } else {
-    $("why").textContent = "Det finns ingen historik för den här avgången ännu, så planen utgår från tidtabellen med en minuts marginal och räknar med att bussen kan vara fem minuter sen.";
-  }
-  drawChart(bus);
-}
-
-function drawChart(bus) {
-  const svg = $("chart");
-  const W = 640, H = 120, padL = 20, padR = 24;
-  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
-  svg.style.minWidth = "520px";
-  svg.style.width = "100%";
-  const dep = parseClock("07:21:15");
-  const data = HISTORY[dep];
-  const lo = dep - 135, hi = dep + 945;
-  const x = s => padL + (s - lo) / (hi - lo) * (W - padL - padR);
-  const css = getComputedStyle(document.documentElement);
-  const c = name => css.getPropertyValue(name).trim();
-  let out = "";
-  for (let m = Math.ceil(lo / 60 / 2) * 2; m * 60 <= hi; m += 2) {
-    const xs = x(m * 60);
-    out += `<line x1="${xs}" x2="${xs}" y1="18" y2="86" stroke="${c("--line")}" stroke-width="1"/>`;
-    out += `<text x="${xs}" y="104" text-anchor="middle">${fmt(m * 60)}</text>`;
-  }
-  out += `<line x1="${x(dep)}" x2="${x(dep)}" y1="12" y2="92" stroke="${c("--muted")}" stroke-dasharray="3 3" stroke-width="1.5"/>`;
-  out += `<text x="${x(dep) + 4}" y="12">tidtabell</text>`;
-  if (bus && bus.dep === dep) {
-    out += `<line x1="${x(bus.atStop)}" x2="${x(bus.atStop)}" y1="18" y2="86" stroke="${c("--dawn")}" stroke-width="2.5"/>`;
-  }
-  const rows = {};
-  for (const [day, d] of data) {
-    const key = Math.round(d / 15);
-    rows[key] = (rows[key] || 0) + 1;
-    const monday = new Date(day + "T12:00:00").getDay() === 1;
-    const cy = 78 - (rows[key] - 1) * 12;
-    out += `<circle cx="${x(dep + d)}" cy="${cy}" r="5" fill="${monday ? c("--warn") : c("--bus")}"><title>${day}: ${fmt(dep + d, true)}</title></circle>`;
-  }
-  svg.innerHTML = out;
-}
-
-// Clock and in-page alarm.
-let armed = false, rang = false, audio = null, wakeLock = null;
-function beep(seconds = 1.5) {
-  audio = audio || new (window.AudioContext || window.webkitAudioContext)();
-  const now = audio.currentTime;
-  for (let i = 0; i < seconds * 2; i++) {
-    const o = audio.createOscillator(), g = audio.createGain();
-    o.frequency.value = i % 2 ? 660 : 880;
-    g.gain.setValueAtTime(0.0001, now + i * 0.5);
-    g.gain.exponentialRampToValueAtTime(0.3, now + i * 0.5 + 0.02);
-    g.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.5 + 0.4);
-    o.connect(g).connect(audio.destination);
-    o.start(now + i * 0.5); o.stop(now + i * 0.5 + 0.45);
-  }
-}
-$("test").addEventListener("click", () => beep(1.5));
-$("arm").addEventListener("click", async () => {
-  armed = !armed; rang = false;
-  if (armed) {
-    beep(0.5);
-    try { wakeLock = await navigator.wakeLock?.request("screen"); } catch {}
-  } else {
-    try { await wakeLock?.release(); } catch {}
-    wakeLock = null;
-  }
-  tick();
 });
-function tick() {
-  const d = new Date();
-  const nowSec = d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
-  $("now").textContent = fmt(nowSec, true);
-  $("arm").textContent = armed ? "Stäng av larm" : "Starta larm";
-  if (!armed || !current) { $("armStatus").textContent = current ? "Larmet är av" : "Inget larm"; return; }
-  let left = current.wake - nowSec;
-  if (left < -60) left += 86400;
-  if (left <= 0 && !rang) { rang = true; beep(20); }
-  const h = Math.floor(Math.max(0, left) / 3600), m = Math.floor(Math.max(0, left) % 3600 / 60);
-  $("armStatus").textContent = rang ? "God morgon" : `Ringer ${fmt(current.wake)}, om ${h} h ${m} min`;
-}
+document.addEventListener("change", ev => {
+  const t = ev.target;
+  if (t.id?.startsWith("r-")) {
+    const r = ui.resa;
+    if (t.id === "r-from") r.from = t.value;
+    if (t.id === "r-to") r.to = t.value;
+    if (t.id === "r-date") r.date = t.value;
+    if (t.id === "r-time") r.time = t.value;
+    r.open = null; renderResaResults(); return;
+  }
+  if (t.id === "home-stop") { S.home.stop = t.value; saveState(); render(); return; }
+  if (t.id === "home-m") { S.home.meters = Math.max(0, Math.min(3000, Math.round(Number(t.value) || 0))); saveState(); render(); return; }
+  if (t.id === "set-kmh") { S.settings.customKmh = Math.max(2, Math.min(15, Number(t.value) || 5)); saveState(); openSettings(); render(); return; }
+  if (t.id === "set-snooze") { S.settings.snooze = Math.max(1, Math.min(15, Math.round(Number(t.value) || 5))); saveState(); return; }
+  if (t.dataset.rt) {
+    const row = S.settings.routines[t.dataset.rt][Number(t.dataset.i)];
+    if (t.dataset.f === "n") row[0] = t.value.trim() || "Moment";
+    else row[1] = Math.max(0, Math.min(120, Math.round(Number(t.value) || 0)));
+    saveState();
+    const sum = $("rtsum-" + t.dataset.rt);
+    if (sum) sum.textContent = durMin(routineSec(t.dataset.rt));
+    render();
+  }
+});
+document.addEventListener("keydown", ev => {
+  if (ev.key === "Escape" && ui.sheet) { closeSheet(); render(); }
+});
+$("openSettings").addEventListener("click", openSettings);
+document.addEventListener("visibilitychange", async () => {
+  if (document.visibilityState === "visible" && ui.armed && !wakeLock) { try { wakeLock = await navigator.wakeLock?.request("screen"); } catch {} }
+});
 
-renderRoutine();
-plan();
+render();
 tick();
 setInterval(tick, 1000);
-matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", () => plan());
-new MutationObserver(() => plan()).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
 </script>
