@@ -46,3 +46,20 @@ ODDS_API_KEY=din-nyckel python ev_scanner.py
 
 Obs: ett positivt EV är ett statistiskt övertag över många spel, ingen garanti för enskilda matcher.
 Bookmakers kan begränsa konton som konsekvent spelar på värde.
+
+## Busspunktlighet (KoDa)
+
+`koda_punctuality.py` hämtar historisk GTFS + GTFS-RT (TripUpdates) från
+[Trafiklab KoDa](https://www.trafiklab.se/api/trafiklab-apis/koda/) och visar hur ofta en viss avgång
+gick tidigt / i tid / sent. Standard: SL linje 670, avgång 07:20, vardagar. Tidig = mer än 1 min före
+tidtabellen, sen = mer än 3 min efter.
+
+```sh
+pip install py7zr gtfs-realtime-bindings
+export TRAFIKLAB_KODA_KEY=...
+python koda_punctuality.py                               # listar hållplatserna på linje 670
+python koda_punctuality.py --stop "Rindö" --from 2026-09-28 --to 2026-10-23
+```
+
+KoDa svarar 202 medan ett arkiv förbereds; skriptet väntar och försöker igen. Arkiven är stora, så bara
+det som rör linjen sparas (som JSON i `koda_cache/`) och resten raderas.
