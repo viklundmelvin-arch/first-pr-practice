@@ -86,3 +86,9 @@ def test_read_archive_members_reads_zip(tmp_path):
         z.writestr("sl/routes.txt", "x")
         z.writestr("sl/trips.txt", "y")
     assert read_archive_members(archive, {"routes.txt"}) == {"routes.txt": b"x"}
+
+
+def test_read_archive_members_empty_koda_archive(tmp_path):
+    archive = tmp_path / "a.archive"
+    archive.write_bytes(bytes.fromhex("377abcaf271c0004") + bytes(24))
+    assert read_archive_members(archive, None) == {}

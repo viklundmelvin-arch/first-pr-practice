@@ -74,6 +74,9 @@ def read_archive_members(path, wanted):
 
     KoDa serves some archives as zip and others as 7z, so detect the format from the file itself.
     """
+    if Path(path).stat().st_size <= 32:
+        # KoDa answers with a bare 32-byte 7z header when it has no data for that date/hour.
+        return {}
     if zipfile.is_zipfile(path):
         with zipfile.ZipFile(path) as z:
             names = [n for n in z.namelist() if not n.endswith("/")]
