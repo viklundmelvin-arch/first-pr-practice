@@ -1,9 +1,9 @@
 """How punctual is one SL departure? Uses historical GTFS(-RT) data from Trafiklab KoDa.
 
 Example:
-    python koda_punctuality.py --line 670 --stop "Vaxholm" --time 07:20 --from 2026-09-28 --to 2026-10-23
+    python koda_punctuality.py --line 670 --stop "Pålsundsvägen" --time 07:20 --from 2026-09-28 --to 2026-10-23
 
-Without --stop the script lists the stops on the line so you can pick yours.
+With --stop "" the script lists the stops on the line so you can pick yours.
 """
 
 import argparse
@@ -249,7 +249,7 @@ def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--operator", default="sl")
     p.add_argument("--line", default="670")
-    p.add_argument("--stop", help="del av hållplatsnamnet; utelämna för att lista linjens hållplatser")
+    p.add_argument("--stop", default="Pålsundsvägen", help="del av hållplatsnamnet; tom sträng listar linjens hållplatser")
     p.add_argument("--time", default="07:20", help="tidtabellstid vid hållplatsen (HH:MM)")
     p.add_argument("--headsign", help="filtrera på riktning, t.ex. 'Tekniska högskolan'")
     p.add_argument("--from", dest="start", default="2026-09-28")

@@ -57,8 +57,8 @@ tidtabellen, sen = mer än 3 min efter.
 ```sh
 pip install py7zr gtfs-realtime-bindings
 export TRAFIKLAB_KODA_KEY=...
-python koda_punctuality.py                               # listar hållplatserna på linje 670
-python koda_punctuality.py --stop "Rindö" --from 2026-09-28 --to 2026-10-23
+python koda_punctuality.py --stop ""                     # listar hållplatserna på linje 670
+python koda_punctuality.py --from 2026-09-28 --to 2026-10-23
 ```
 
 KoDa svarar 202 medan ett arkiv förbereds; skriptet väntar och försöker igen. Arkiven är stora, så bara
