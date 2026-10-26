@@ -1,0 +1,355 @@
+<title>Busslarm</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: one column, the clock and wake time on top, the backwards plan below it, the bus evidence last. */
+:root {
+  --bg: #eef1f6;
+  --surface: #ffffff;
+  --ink: #18203a;
+  --muted: #5d6680;
+  --line: #d5dbe7;
+  --dawn: #e2772f;
+  --dawn-soft: #fbe6d6;
+  --bus: #2f5fd0;
+  --ok: #2b8a57;
+  --warn: #b5481f;
+  --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1424; --surface: #182036; --ink: #e8ecf6; --muted: #9aa4c0; --line: #2a3452;
+    --dawn: #f29a52; --dawn-soft: #3a2a22; --bus: #7ea2ff; --ok: #5fc48d; --warn: #f08a63;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1424; --surface: #182036; --ink: #e8ecf6; --muted: #9aa4c0; --line: #2a3452;
+  --dawn: #f29a52; --dawn-soft: #3a2a22; --bus: #7ea2ff; --ok: #5fc48d; --warn: #f08a63;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 24px 48px;
+}
+main { max-width: 720px; margin: 0 auto; display: grid; gap: 20px; }
+h1, h2 { font-family: var(--display); text-wrap: balance; margin: 0; }
+h2 { font-size: 1.15rem; font-weight: 700; }
+.num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.eyebrow { font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px; display: grid; gap: 14px; min-width: 0; }
+.muted { color: var(--muted); }
+p { margin: 0; }
+
+.hero { display: grid; gap: 6px; }
+.hero header { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.hero h1 { font-size: 1.1rem; font-weight: 500; color: var(--muted); }
+.now { font-size: 1rem; color: var(--muted); }
+.wake { font-family: var(--display); font-weight: 700; font-size: clamp(4.5rem, 22vw, 8rem); line-height: .95; letter-spacing: -.02em; color: var(--dawn); }
+.wake-sub { font-size: 1.05rem; }
+.alarm-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-top: 8px; }
+button { font: inherit; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); padding: 10px 16px; cursor: pointer; }
+button.primary { background: var(--dawn); border-color: var(--dawn); color: #fff; font-weight: 700; }
+button:focus-visible, input:focus-visible { outline: 3px solid var(--bus); outline-offset: 2px; }
+.status-pill { font-size: .85rem; padding: 4px 10px; border-radius: 999px; background: var(--dawn-soft); color: var(--ink); }
+
+.fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+label { display: grid; gap: 4px; font-size: .9rem; color: var(--muted); }
+input { font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; width: 100%; min-width: 0; }
+input[type="time"], input[type="number"] { font-family: var(--mono); }
+
+.routine { display: grid; gap: 8px; }
+.routine-row { display: grid; grid-template-columns: 1fr 88px 36px; gap: 8px; align-items: center; }
+.routine-row button { padding: 6px 0; color: var(--muted); }
+.routine-foot { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+.timeline { list-style: none; margin: 0; padding: 0; display: grid; }
+.timeline li { display: grid; grid-template-columns: 4.2rem 1fr auto; gap: 12px; padding: 9px 0; border-top: 1px solid var(--line); align-items: baseline; }
+.timeline li:first-child { border-top: 0; }
+.timeline .t { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.timeline .d { color: var(--muted); font-size: .9rem; font-family: var(--mono); }
+.timeline li.key .t, .timeline li.key .what { font-weight: 700; }
+.timeline li.wake-row .t { color: var(--dawn); }
+.timeline li.bus-row .t { color: var(--bus); }
+
+.why { font-size: .95rem; }
+.chart-wrap { overflow-x: auto; }
+svg text { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+.legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: .85rem; color: var(--muted); }
+.legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; background: var(--c); }
+.note { font-size: .85rem; color: var(--muted); }
+@media (prefers-reduced-motion: no-preference) { .wake { transition: color .3s; } }
+</style>
+
+<main>
+  <section class="hero" aria-live="polite">
+    <header>
+      <h1>Busslarm · 670X från Pålsundsvägen</h1>
+      <span class="now num" id="now">--:--:--</span>
+    </header>
+    <span class="eyebrow">Väckning i morgon</span>
+    <div class="wake num" id="wake">--:--</div>
+    <p class="wake-sub" id="wakeSub"></p>
+    <div class="alarm-row">
+      <button class="primary" id="arm" type="button">Starta larm</button>
+      <button id="test" type="button">Testa ljudet</button>
+      <span class="status-pill" id="armStatus">Larmet är av</span>
+    </div>
+    <p class="note">Larmet ringer bara medan sidan är öppen. Ett riktigt väckarlarm kräver en installerad app.</p>
+  </section>
+
+  <section class="panel">
+    <h2>Resan</h2>
+    <div class="fields">
+      <label for="arrive">Framme senast<input type="time" id="arrive" value="08:15"></label>
+      <label for="ride">Bussresa (min)<input type="number" id="ride" min="1" max="120" value="35"></label>
+      <label for="walkFrom">Gång från hållplats (min)<input type="number" id="walkFrom" min="0" max="60" value="5"></label>
+      <label for="walkTo">Gång till Pålsundsvägen (min)<input type="number" id="walkTo" min="0" max="60" value="6"></label>
+    </div>
+    <p class="note">Exempelvärden. Ändra dem till din egen resa; de sparas i den här webbläsaren.</p>
+  </section>
+
+  <section class="panel">
+    <h2>Morgonrutin</h2>
+    <div class="routine" id="routine"></div>
+    <div class="routine-foot">
+      <button type="button" id="addStep">Lägg till moment</button>
+      <span class="muted">Totalt <span class="num" id="routineTotal">0</span> min</span>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Morgonen baklänges</h2>
+    <ol class="timeline" id="timeline"></ol>
+    <p class="why" id="why"></p>
+  </section>
+
+  <section class="panel">
+    <h2>Så brukar 07.21-bussen gå</h2>
+    <p class="muted">Varje punkt är en vardagsmorgon 29 sep–23 okt 2026 enligt KoDa (SL:s sista prognos innan bussen lämnade hållplatsen). 28 september saknas i datat.</p>
+    <div class="chart-wrap"><svg id="chart" role="img" aria-label="Faktiska avgångstider för 07.21-bussen, 19 morgnar"></svg></div>
+    <div class="legend">
+      <span style="--c: var(--bus)">Avgång</span>
+      <span style="--c: var(--warn)">Måndag</span>
+      <span style="--c: var(--dawn)">Din tid vid hållplatsen</span>
+    </div>
+  </section>
+</main>
+
+<script>
+// Weekday timetable for 670X at Pålsundsvägen (GTFS, 20 Oct 2026), seconds after midnight.
+const DEPARTURES = ["06:20", "06:36", "06:50", "07:05", "07:21:15", "07:37", "07:50"].map(parseClock);
+// Observed departures of the 07:21:15 trip, seconds after the timetable (KoDa TripUpdates).
+const HISTORY = {
+  [parseClock("07:21:15")]: [
+    ["2026-09-29", 189], ["2026-09-30", 232], ["2026-10-01", 188], ["2026-10-02", 170],
+    ["2026-10-05", 420], ["2026-10-06", 95], ["2026-10-07", 209], ["2026-10-08", 93], ["2026-10-09", 223],
+    ["2026-10-12", 895], ["2026-10-13", 181], ["2026-10-14", 345], ["2026-10-15", 191], ["2026-10-16", 156],
+    ["2026-10-19", 187], ["2026-10-20", 270], ["2026-10-21", 193], ["2026-10-22", 229], ["2026-10-23", 148],
+  ],
+};
+const STOP_SLACK = 30;         // be at the stop this long before the earliest bus seen
+const NO_DATA_EARLY = 60;      // without history, be there a minute early (buses may run ahead)
+const NO_DATA_LATE = 300;      // without history, plan the arrival as if the bus runs 5 min late
+const DEFAULT_ROUTINE = [["Hygien", 15], ["Frukost", 15], ["Påklädning", 10], ["Packning", 5]];
+
+function parseClock(s) {
+  const [h, m, sec = 0] = s.split(":").map(Number);
+  return h * 3600 + m * 60 + sec;
+}
+function fmt(sec, withSeconds = false) {
+  sec = ((Math.round(sec) % 86400) + 86400) % 86400;
+  const h = String(Math.floor(sec / 3600)).padStart(2, "0");
+  const m = String(Math.floor(sec % 3600 / 60)).padStart(2, "0");
+  const s = String(sec % 60).padStart(2, "0");
+  return withSeconds ? `${h}.${m}.${s}` : `${h}.${m}`;
+}
+function quantile(sorted, q) {
+  return sorted[Math.min(sorted.length - 1, Math.ceil(q * sorted.length) - 1)];
+}
+
+function store(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch {} }
+function load(key, fallback) { try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; } catch { return fallback; } }
+
+const $ = id => document.getElementById(id);
+const inputs = ["arrive", "ride", "walkFrom", "walkTo"];
+let routine = load("busslarm.routine", DEFAULT_ROUTINE);
+const saved = load("busslarm.trip", null);
+if (saved) inputs.forEach(id => { if (saved[id] != null) $(id).value = saved[id]; });
+
+function renderRoutine() {
+  const box = $("routine");
+  box.innerHTML = "";
+  routine.forEach(([name, min], i) => {
+    const row = document.createElement("div");
+    row.className = "routine-row";
+    row.innerHTML = `<input id="step-name-${i}" aria-label="Moment" value="">
+      <input id="step-min-${i}" type="number" min="0" max="180" aria-label="Minuter" value="${min}">
+      <button type="button" aria-label="Ta bort ${name}">✕</button>`;
+    row.children[0].value = name;
+    row.children[0].addEventListener("input", e => { routine[i][0] = e.target.value; save(); plan(); });
+    row.children[1].addEventListener("input", e => { routine[i][1] = Math.max(0, Number(e.target.value) || 0); save(); plan(); });
+    row.children[2].addEventListener("click", () => { routine.splice(i, 1); save(); renderRoutine(); plan(); });
+    box.appendChild(row);
+  });
+}
+$("addStep").addEventListener("click", () => { routine.push(["Nytt moment", 5]); save(); renderRoutine(); plan(); });
+inputs.forEach(id => $(id).addEventListener("input", () => { save(); plan(); }));
+function save() {
+  store("busslarm.routine", routine);
+  store("busslarm.trip", Object.fromEntries(inputs.map(id => [id, $(id).value])));
+}
+
+let current = null;
+
+// Work backwards: latest bus whose late case still arrives in time, then the stop, the walk and the routine.
+function plan() {
+  const arrive = parseClock($("arrive").value || "08:00");
+  const ride = (Number($("ride").value) || 0) * 60;
+  const walkFrom = (Number($("walkFrom").value) || 0) * 60;
+  const walkTo = (Number($("walkTo").value) || 0) * 60;
+  const routineSec = routine.reduce((s, [, m]) => s + (Number(m) || 0) * 60, 0);
+  $("routineTotal").textContent = routineSec / 60;
+
+  const options = DEPARTURES.map(dep => {
+    const hist = HISTORY[dep] ? HISTORY[dep].map(([, d]) => d).sort((a, b) => a - b) : null;
+    const late = hist ? quantile(hist, 0.9) : NO_DATA_LATE;
+    const atStop = hist ? dep + hist[0] - STOP_SLACK : dep - NO_DATA_EARLY;
+    return { dep, hist, late, atStop: Math.floor(atStop / 60) * 60, arriveLate: dep + late + ride + walkFrom };
+  });
+  const bus = options.filter(o => o.arriveLate <= arrive).pop();
+
+  const tl = $("timeline");
+  tl.innerHTML = "";
+  if (!bus) {
+    current = null;
+    $("wake").textContent = "--.--";
+    $("wakeSub").textContent = "Ingen avgång hinner fram i tid. Ändra när du ska vara framme.";
+    $("why").textContent = "";
+    drawChart(null);
+    return;
+  }
+  const leave = bus.atStop - walkTo;
+  const wake = leave - routineSec;
+  current = { wake, bus };
+
+  const rows = [[arrive, "Framme", "", "key"], [arrive - walkFrom, "Kliver av bussen, senast", `${walkFrom / 60} min gång`, ""],
+    [bus.hist ? bus.dep + bus.hist[Math.floor(bus.hist.length / 2)] : bus.dep,
+      bus.hist ? `670X brukar gå (tidtabell ${fmt(bus.dep)})` : "670X enligt tidtabellen", `${ride / 60} min resa`, "bus-row"],
+    [bus.atStop, "Vid Pålsundsvägen", bus.hist ? "datadriven marginal" : "ingen historik", "key bus-row"],
+    [leave, "Gå hemifrån", `${walkTo / 60} min gång`, "key"]];
+  let t = leave;
+  for (let i = routine.length - 1; i >= 0; i--) {
+    const [name, min] = routine[i];
+    t -= (Number(min) || 0) * 60;
+    rows.push([t, name || "Moment", `${min} min`, ""]);
+  }
+  rows.push([wake, "Väckning", "", "key wake-row"]);
+  for (const [time, what, dur, cls] of rows) {
+    const li = document.createElement("li");
+    li.className = cls;
+    li.innerHTML = `<span class="t">${fmt(time)}</span><span class="what"></span><span class="d"></span>`;
+    li.children[1].textContent = what;
+    li.children[2].textContent = dur;
+    tl.appendChild(li);
+  }
+
+  $("wake").textContent = fmt(wake);
+  $("wakeSub").innerHTML = `Du tar <strong>${fmt(bus.dep)}-bussen</strong> och står vid hållplatsen <span class="num">${fmt(bus.atStop)}</span>.`;
+  if (bus.hist) {
+    const n = bus.hist.length;
+    const schoolMargin = Math.round((arrive - bus.arriveLate) / 60);
+    $("why").textContent = `Under ${n} morgnar gick bussen aldrig tidigare än ${fmt(bus.dep + bus.hist[0], true)}, så ${fmt(bus.atStop)} hade räckt varje gång. ` +
+      `Ankomsten räknas på en sen morgon (9 av 10 morgnar gick bussen senast ${fmt(bus.dep + bus.late, true)}), och då är du ändå framme med ${schoolMargin} min tillgodo. ` +
+      `Med vanliga fem minuters marginal före tidtabellen hade du fått stå där ${fmt(bus.dep - 300)}.`;
+  } else {
+    $("why").textContent = "Det finns ingen historik för den här avgången ännu, så planen utgår från tidtabellen med en minuts marginal och räknar med att bussen kan vara fem minuter sen.";
+  }
+  drawChart(bus);
+}
+
+function drawChart(bus) {
+  const svg = $("chart");
+  const W = 640, H = 120, padL = 20, padR = 24;
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  svg.style.minWidth = "520px";
+  svg.style.width = "100%";
+  const dep = parseClock("07:21:15");
+  const data = HISTORY[dep];
+  const lo = dep - 135, hi = dep + 945;
+  const x = s => padL + (s - lo) / (hi - lo) * (W - padL - padR);
+  const css = getComputedStyle(document.documentElement);
+  const c = name => css.getPropertyValue(name).trim();
+  let out = "";
+  for (let m = Math.ceil(lo / 60 / 2) * 2; m * 60 <= hi; m += 2) {
+    const xs = x(m * 60);
+    out += `<line x1="${xs}" x2="${xs}" y1="18" y2="86" stroke="${c("--line")}" stroke-width="1"/>`;
+    out += `<text x="${xs}" y="104" text-anchor="middle">${fmt(m * 60)}</text>`;
+  }
+  out += `<line x1="${x(dep)}" x2="${x(dep)}" y1="12" y2="92" stroke="${c("--muted")}" stroke-dasharray="3 3" stroke-width="1.5"/>`;
+  out += `<text x="${x(dep) + 4}" y="12">tidtabell</text>`;
+  if (bus && bus.dep === dep) {
+    out += `<line x1="${x(bus.atStop)}" x2="${x(bus.atStop)}" y1="18" y2="86" stroke="${c("--dawn")}" stroke-width="2.5"/>`;
+  }
+  const rows = {};
+  for (const [day, d] of data) {
+    const key = Math.round(d / 15);
+    rows[key] = (rows[key] || 0) + 1;
+    const monday = new Date(day + "T12:00:00").getDay() === 1;
+    const cy = 78 - (rows[key] - 1) * 12;
+    out += `<circle cx="${x(dep + d)}" cy="${cy}" r="5" fill="${monday ? c("--warn") : c("--bus")}"><title>${day}: ${fmt(dep + d, true)}</title></circle>`;
+  }
+  svg.innerHTML = out;
+}
+
+// Clock and in-page alarm.
+let armed = false, rang = false, audio = null, wakeLock = null;
+function beep(seconds = 1.5) {
+  audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+  const now = audio.currentTime;
+  for (let i = 0; i < seconds * 2; i++) {
+    const o = audio.createOscillator(), g = audio.createGain();
+    o.frequency.value = i % 2 ? 660 : 880;
+    g.gain.setValueAtTime(0.0001, now + i * 0.5);
+    g.gain.exponentialRampToValueAtTime(0.3, now + i * 0.5 + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.5 + 0.4);
+    o.connect(g).connect(audio.destination);
+    o.start(now + i * 0.5); o.stop(now + i * 0.5 + 0.45);
+  }
+}
+$("test").addEventListener("click", () => beep(1.5));
+$("arm").addEventListener("click", async () => {
+  armed = !armed; rang = false;
+  if (armed) {
+    beep(0.5);
+    try { wakeLock = await navigator.wakeLock?.request("screen"); } catch {}
+  } else {
+    try { await wakeLock?.release(); } catch {}
+    wakeLock = null;
+  }
+  tick();
+});
+function tick() {
+  const d = new Date();
+  const nowSec = d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
+  $("now").textContent = fmt(nowSec, true);
+  $("arm").textContent = armed ? "Stäng av larm" : "Starta larm";
+  if (!armed || !current) { $("armStatus").textContent = current ? "Larmet är av" : "Inget larm"; return; }
+  let left = current.wake - nowSec;
+  if (left < -60) left += 86400;
+  if (left <= 0 && !rang) { rang = true; beep(20); }
+  const h = Math.floor(Math.max(0, left) / 3600), m = Math.floor(Math.max(0, left) % 3600 / 60);
+  $("armStatus").textContent = rang ? "God morgon" : `Ringer ${fmt(current.wake)}, om ${h} h ${m} min`;
+}
+
+renderRoutine();
+plan();
+tick();
+setInterval(tick, 1000);
+matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", () => plan());
+new MutationObserver(() => plan()).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+</script>
