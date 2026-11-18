@@ -20,3 +20,8 @@ a{color:inherit}
 .link{color:var(--accent)}
 footer{border-top:1px solid var(--soft)}
 .small{font-size:.8rem;color:#8a8470}
+
+img{max-width:100%;display:block;object-fit:cover}
+.hero-img{width:100%;max-height:480px;border-radius:10px;margin-bottom:1.5rem}
+.ph[src]{min-height:0;aspect-ratio:4/3;width:100%}
+.tall{width:100%;max-height:480px;border-radius:10px}
