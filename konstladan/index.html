@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Konstladan i Tolg</title>
+<meta name="description" content="Konst, mat och upplevelser i Munkatorp, Tolg, 20 minuter utanför Växjö. Emilia Linderholms ateljé och galleri, Jonas Danielssons matstudio.">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500&display=swap">
+</head>
+<body>
+<style>
+/* Layout: en sida med fyra vyer (Hem, Upplevelser, Konsten, Jonas matstudio) som byts via #-länkar. Palett hämtad från rosorna och de turkosa skålarna. */
+:root{
+  --bg:#f8f5f6; --fg:#241c24; --muted:#6a5d69; --surface:#efe7ea; --line:#ddd0d6;
+  --accent:#b01f5c; --on-accent:#fff; --teal:#1f7a78;
+  --display:Fraunces,Georgia,"Times New Roman",serif;
+  --body:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#181218; --fg:#f1e9ee; --muted:#b3a3ae; --surface:#241b24; --line:#3a2d39;
+  --accent:#f08ab8; --on-accent:#2a0f1c; --teal:#6fcac6; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#181218; --fg:#f1e9ee; --muted:#b3a3ae; --surface:#241b24; --line:#3a2d39;
+  --accent:#f08ab8; --on-accent:#2a0f1c; --teal:#6fcac6; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:400 17px/1.65 var(--body);margin:0;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--display);font-weight:700;line-height:1.12;margin:0;text-wrap:balance}
+h1{font-size:clamp(2.3rem,7vw,4.2rem);letter-spacing:-.01em}
+h2{font-size:clamp(1.6rem,4vw,2.2rem)}
+h3{font-size:1.2rem}
+p{margin:0;max-width:64ch}
+a{color:inherit}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+img{display:block;max-width:100%;object-fit:cover}
+.in{max-width:1040px;margin-inline:auto}
+header{display:flex;justify-content:space-between;align-items:center;gap:10px 28px;flex-wrap:wrap;padding-block:16px;border-bottom:1px solid var(--line)}
+.brand{font-family:var(--display);font-weight:700;font-size:1.2rem;text-decoration:none}
+nav{display:flex;gap:6px 22px;flex-wrap:wrap;font-size:.93rem}
+nav a{text-decoration:none;color:var(--muted);padding-block:4px;border-bottom:2px solid transparent}
+nav a:hover{color:var(--fg)}
+nav a[aria-current="page"]{color:var(--fg);border-bottom-color:var(--accent)}
+.view{padding-block:clamp(32px,6vw,64px);display:grid;gap:clamp(36px,6vw,64px)}
+.js .view{display:none}.js .view.on{display:grid}
+.eyebrow{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:500}
+.hero{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:32px;align-items:center}
+.hero>*{min-width:0}
+.hero .txt{display:grid;gap:18px}
+.hero img{width:100%;aspect-ratio:4/5;max-height:560px;border-radius:4px}
+.lead{font-size:1.15rem;color:var(--muted)}
+.btn{justify-self:start;display:inline-block;background:var(--accent);color:var(--on-accent);padding:12px 24px;border-radius:4px;text-decoration:none;font-weight:500}
+.btn.alt{background:none;color:var(--fg);border:1px solid var(--line)}
+.row{display:flex;gap:12px;flex-wrap:wrap}
+.sec{display:grid;gap:20px}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:24px}
+.cols>*{min-width:0}
+.card{display:grid;gap:10px;align-content:start}
+.card p,.muted{color:var(--muted);font-size:.97rem}
+.card img{width:100%;aspect-ratio:4/3;border-radius:4px}
+.ph{display:grid;place-items:center;text-align:center;padding:12px;background:var(--surface);color:var(--muted);aspect-ratio:4/5;font-size:.82rem;border-radius:4px;border:1px dashed var(--line)}
+.ph b{display:block;font-family:var(--display);font-size:1rem;color:var(--fg);margin-bottom:4px}
+.band{background:var(--surface);padding:clamp(24px,5vw,44px);border-radius:4px;display:grid;gap:14px}
+.split{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:32px;align-items:start}
+.split>*{min-width:0}
+.split img{width:100%;border-radius:4px}
+.list{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+.list li{padding-left:20px;position:relative;color:var(--muted)}
+.list li::before{content:"";position:absolute;left:0;top:.7em;width:8px;height:2px;background:var(--accent)}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;border-block:1px solid var(--line);padding-block:20px}
+.facts div{display:grid;gap:2px}.facts b{font-family:var(--display)}
+.facts span{color:var(--muted);font-size:.93rem}
+blockquote{margin:0;padding-left:18px;border-left:3px solid var(--accent);color:var(--muted);max-width:60ch}
+blockquote cite{display:block;font-style:normal;font-size:.88rem;margin-top:6px}
+.gal{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.gal img{width:100%;aspect-ratio:3/4;border-radius:4px}
+.tag{color:var(--muted);font-style:normal}
+footer{border-top:1px solid var(--line);margin-top:24px;padding-block:36px 56px;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:28px;font-size:.95rem}
+footer h3{font-size:1rem;margin-bottom:6px}
+footer p{color:var(--muted)}
+.note{font-size:.8rem;color:var(--muted)}
+</style>
+
+<div class="in">
+<header>
+  <a class="brand" href="#hem">Konstladan i Tolg</a>
+  <nav id="nav">
+    <a href="#hem">Hem</a><a href="#upplevelser">Upplevelser</a><a href="#konsten">Konsten</a><a href="#matstudion">Jonas matstudio</a>
+  </nav>
+</header>
+
+<main>
+<!-- HEM -->
+<div class="view" id="v-hem">
+  <div class="hero">
+    <div class="txt">
+      <span class="eyebrow">Munkatorp, Tolg · 20 min från Växjö</span>
+      <h1>Konst, mat och natur på samma gård.</h1>
+      <p class="lead">En lada från början av 1900-talet som blivit ateljé och galleri, omgiven av en parkliknande trädgård. Här målar Emilia Linderholm och här lagar Jonas Danielsson mat med doft av Medelhavet.</p>
+      <div class="row"><a class="btn" href="#upplevelser">Boka en upplevelse</a><a class="btn alt" href="#kontakt">Hitta hit</a></div>
+    </div>
+    <img src="bilder/skylt-konstladan.webp" alt="Handmålad svart skylt med pilar mot Konstladan, toalett och boulebana">
+  </div>
+
+  <div class="facts">
+    <div><b>Ateljé och galleri</b><span>Emilias konstverk och ett urval av hennes mammas, Lena Linderholms, produkter</span></div>
+    <div><b>Matstudio</b><span>Komplett restaurangkök, drivet av kocken Jonas Danielsson</span></div>
+    <div><b>Trädgård</b><span>Över 250 planterade rosor, mest återbrukade växter, och boule</span></div>
+  </div>
+
+  <section class="sec">
+    <h2>Upptäck Konstladan</h2>
+    <div class="cols">
+      <article class="card"><img src="bilder/studion-dagtid.webp" alt="Matstudions container en solig dag med gäster utomhus på grusgården"><h3>Upplevelser och kurser</h3><p>Måla och skåla, målarkurs, bussbesök och mentorsprogram.</p><a href="#upplevelser">Se upplevelserna →</a></article>
+      <article class="card"><div class="ph" style="aspect-ratio:4/3"><span><b>Målning av Emilia</b>Bild kommer</span></div><h3>Emilia Linderholm</h3><p>Färgstarka kvinnogestalter i olja på linneduk, och glas.</p><a href="#konsten">Läs om konsten →</a></article>
+      <article class="card"><img src="bilder/desserter.webp" alt="Skålar med dessert uppradade på en bänk i köket"><h3>Jonas matstudio</h3><p>Generös och vällagad mat med inspiration från Frankrike och södra Europa.</p><a href="#matstudion">Läs om maten →</a></article>
+    </div>
+  </section>
+
+  <section class="band">
+    <span class="eyebrow">Aktuellt</span>
+    <h2>5–6 december är det öppet i Konstladan</h2>
+    <p>Emilia har också separatutställning hos Tranås-bygdens konstförening 13–29 november. Följ Konstladan på Instagram för uppdaterade tider.</p>
+  </section>
+
+  <section class="sec">
+    <h2>Från gården</h2>
+    <div class="gal">
+      <img src="bilder/studion-skymning.webp" alt="Matstudion i skymningen, med belysning och blommor">
+      <img src="bilder/rosor.webp" alt="Rosa rosor i full blom">
+      <img src="bilder/menytavla.webp" alt="Handskriven meny på krittavla på containerväggen">
+      <img src="bilder/croissant.webp" alt="Grillad croissant med sallad, balsamico och prästkragar i en glasvas">
+    </div>
+  </section>
+</div>
+
+<!-- UPPLEVELSER -->
+<div class="view" id="v-upplevelser">
+  <div class="sec">
+    <span class="eyebrow">Upplevelser</span>
+    <h1>Boka en dag utöver det vanliga</h1>
+    <p class="lead">Konstladan tar emot grupper för måleri, mat och besök i trädgården. Priser och bokning går via Emilia.</p>
+  </div>
+
+  <section class="split">
+    <div class="sec">
+      <h2>Måla och skåla</h2>
+      <p>Lev ut konstnärsdrömmarna i ateljén. Ni målar i akryl på canvas, utifrån ett motiv ni alla utgår från, och Emilia guidar steg för steg. Det handlar om lust, inte prestation, och ingen behöver ha målat förut. Passar kompisgänget, 50-årsfirandet, företagseventet eller den mindre konferensen.</p>
+      <h3>Detta ingår</h3>
+      <ul class="list"><li>Workshop där du skapar din egen tavla, allt material ingår och du tar med den hem</li><li>Personlig handledning av Emilia</li><li>Ett litet minivernissage efteråt</li><li>Snacks</li></ul>
+      <h3>Beställ till</h3>
+      <ul class="list"><li>Lunch eller middag tillagad av Jonas i restaurangköket</li><li>Föreläsningen ”Från Stockholm till Tolg med ton och pensel”</li></ul>
+      <p class="muted">10–20 personer. WiFi och utrustning för en mindre konferens finns.</p>
+    </div>
+    <img src="bilder/utanfor-studion.webp" alt="Två män utanför matstudion, bredvid en handskriven meny på krittavla">
+  </section>
+
+  <section class="band">
+    <h2>Målarkurs, en hel dag</h2>
+    <p>Akryl på duk och akvarell, med enkla och tydliga uppgifter. För dig som vill testa på, och för dig som kommit en bit och vill vidare i ditt eget uttryck. Nya datum släpps snart.</p>
+    <ul class="list"><li>Heldags guidning av Emilia Linderholm, verksam som konstnär och glasformgivare i 20 år</li><li>Förmiddagsfika, lunch med doft av Provence och eftermiddagsfika från matstudion (ange allergier vid anmälan)</li><li>Akvarellblock, färg och en canvasduk 40 × 40 cm, samt en hemlig konstgåva</li></ul>
+    <p class="muted">Minst 10 personer. Betalas via faktura två veckor före kursstart.</p>
+  </section>
+
+  <section class="cols">
+    <article class="card"><h3>Bussbesök</h3><p>Boka en buss och upplev gården. Fika eller medelhavsbuffé, Emilias föreläsning, tid i galleriet och ett besök i trädgården där Jonas berättar om växter och odlingar. Lunch och övernattning i närheten kan ordnas.</p></article>
+    <article class="card"><h3>Mentorsprogram</h3><p>För dig som målat ett tag och vill hitta ditt personliga uttryck. Fem tillfällen under en termin, 2,5 timmar i månaden, i ateljén eller online. Terminen avslutas med vernissage. Fem deltagare per termin, med väntelista.</p></article>
+  </section>
+
+  <blockquote>”Vi var lyriska!” Tack också till Jonas för den goda maten.<cite>Maria, SPF Habo</cite></blockquote>
+
+  <section class="band"><h2>Frågor och bokning</h2><p>Maila Emilia på <strong>emilia@linderholm.se</strong> eller ring <strong>070-144 60 31</strong>.</p></section>
+</div>
+
+<!-- KONSTEN -->
+<div class="view" id="v-konsten">
+  <div class="sec">
+    <span class="eyebrow">Konsten</span>
+    <h1>Emilia Linderholm</h1>
+    <p class="lead">Emilias uttryck är färgstarkt och levande. Med sina kvinnogestalter vill hon väcka känslor hos betraktaren. Hon målar i olja på linneduk, formger glas, och sången och musiken genomsyrar skapandet.</p>
+  </div>
+  <div class="facts">
+    <div><b>Smålands akademis kulturpris</b><span>2020</span></div>
+    <div><b>Stipendium</b><span>Sven och Stina Wibergs stiftelse, 2024</span></div>
+    <div><b>Konstverk till salu</b><span>Melefors Fine Art, eller boka en visning i ateljén</span></div>
+  </div>
+  <section class="sec">
+    <h2>Målningar</h2>
+    <div class="cols" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">
+      <div class="ph"><span><b>Golden air blue dreams</b>100 × 150 cm<br>Bild kommer</span></div>
+      <div class="ph"><span><b>I det lilla händer det stora</b>Olja på duk, 50 × 70 cm<br>Bild kommer</span></div>
+      <div class="ph"><span><b>Titel</b>Bild kommer</span></div>
+      <div class="ph"><span><b>Titel</b>Bild kommer</span></div>
+    </div>
+    <p class="note">Platshållare. Emilias egna bilder läggs in här.</p>
+  </section>
+  <section class="band"><h2>Boka en visning</h2><p>Du kan boka en visning i ateljén och konstladan om du letar efter ett originalverk. Kontakta Emilia på emilia@linderholm.se.</p></section>
+</div>
+
+<!-- JONAS -->
+<div class="view" id="v-matstudion">
+  <div class="split">
+    <div class="sec">
+      <span class="eyebrow">Matstudion</span>
+      <h1>Jonas Danielsson</h1>
+      <p class="lead">En doft av Medelhavet mitt i det småländska landskapet. Jonas matlagning präglas av kärlek till Medelhavets dofter, råvaror och smaker, och ska vara generös, lustfylld och vällagad, med inspiration från det franska och sydeuropeiska köket.</p>
+      <p>Matstudion på gården har ett komplett restaurangkök. Maten går att beställa till måla och skåla, kurser och bussbesök, och på krittavlan vid containern står crêpes, galetter och croissanter.</p>
+    </div>
+    <img src="bilder/utanfor-studion.webp" alt="Två män utanför matstudion, bredvid en handskriven meny på krittavla" style="aspect-ratio:4/5;max-height:520px">
+  </div>
+
+  <section class="cols">
+    <article class="card"><img src="bilder/desserter.webp" alt="Skålar med dessert uppradade på en bänk i köket"><h3>Från köket</h3><p>Desserter i skålar, uppställda i matstudions kök.</p></article>
+    <article class="card"><img src="bilder/croissant.webp" alt="Grillad croissant med sallad, balsamico och prästkragar i en glasvas"><h3>Från krittavlan</h3><p>Crêpes, galetter och croissanter står på menyn.</p></article>
+    <article class="card"><img src="bilder/studion-dagtid.webp" alt="Matstudions container en solig dag med gäster utomhus på grusgården"><h3>Ute i trädgården</h3><p>Gäster på grusgården en solig dag, med rosor intill containern.</p></article>
+  </section>
+
+  <section class="split">
+    <div class="sec">
+      <h2>Trädgården</h2>
+      <p>En annan stor passion är trädgården, med över 250 planterade rosor. Jonas odlar både blommor och ätbara grödor, allt från prunkande blomster till den egna potatisen som så småningom hamnar på tallriken. Mest är det återbrukade växter.</p>
+    </div>
+    <div class="sec">
+      <h2>Vägen till köket</h2>
+      <p>Jonas kommer från Braås och var yrkesverksam musiker i 17 år i Stockholm, med turnéer, tv och radio. Efter flytten tillbaka till Småland utbildade han sig till kock. Skapandet har varit den röda tråden hela vägen.</p>
+    </div>
+  </section>
+
+  <section class="band"><h2>Boka mat</h2><p>Kontakta Jonas på <strong>070-668 98 76</strong> eller <strong>jonas.danielsson1@gmail.com</strong>.</p></section>
+</div>
+</main>
+
+<footer id="kontakt">
+  <div><h3>Konstladan i Tolg</h3><p>Munkatorp Södergård 2<br>363 35 Tolg<br>20 minuter utanför Växjö</p></div>
+  <div><h3>Kontakt</h3><p>Emilia: 070-144 60 31<br>emilia@linderholm.se<br>Jonas: 070-668 98 76</p></div>
+  <div><h3>Följ oss</h3><p>Instagram: @konstladan_i_tolg_<br>Emilia: @artbyemilialinderholm</p><p class="note" style="margin-top:12px">Skiss. Bilder och texter ska bytas mot slutliga.</p></div>
+</footer>
+</div>
+
+<script>
+(function(){
+  var views=["hem","upplevelser","konsten","matstudion"];
+  document.documentElement.classList.add("js");
+  function show(){
+    var h=(location.hash||"").replace("#","");
+    if(h==="kontakt"&&window.__cur)return;
+    if(h==="kontakt")h="hem";
+    if(views.indexOf(h)<0)h="hem";
+    window.__cur=h;
+    views.forEach(function(v){document.getElementById("v-"+v).classList.toggle("on",v===h)});
+    document.querySelectorAll("#nav a").forEach(function(a){
+      if(a.getAttribute("href")==="#"+h)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current")});
+    if(!window.__first){window.__first=1}else{window.scrollTo(0,0)}
+  }
+  window.addEventListener("hashchange",show);show();
+})();
+</script>
+
+</body>
+</html>
