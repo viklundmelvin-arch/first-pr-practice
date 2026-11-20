@@ -6,7 +6,7 @@
 <title>Konstladan i Tolg</title>
 <meta name="description" content="Konst, mat och upplevelser i Munkatorp, Tolg, 20 minuter utanför Växjö. Emilia Linderholms ateljé och galleri, Jonas Danielssons matstudio.">
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500&family=Space+Grotesk:wght@500;700&display=swap">
 </head>
 <body>
 <style>
@@ -80,13 +80,41 @@ footer{border-top:1px solid var(--line);margin-top:24px;padding-block:36px 56px;
 footer h3{font-size:1rem;margin-bottom:6px}
 footer p{color:var(--muted)}
 .note{font-size:.8rem;color:var(--muted)}
+
+/* Teman per flik: Hem plommon och rosa, Upplevelser havsgrön, Konsten färgstark, Jonas modern och mörk. */
+body[data-view="upplevelser"]{--bg:#f1f7f6;--fg:#12302f;--muted:#4d6d6b;--surface:#dcebe8;--line:#bfd7d3;--accent:#0f7f7b;--on-accent:#fff}
+body[data-view="konsten"]{--bg:#fffdf8;--fg:#231a2e;--muted:#6b5e78;--surface:#fdeedd;--line:#f0d9c4;--accent:#e5471b;--on-accent:#fff;--c2:#2a6fdb;--c3:#8a3fc7;--c4:#e8b100;--c5:#d8337f}
+body[data-view="matstudion"]{--bg:#101311;--fg:#eef1ea;--muted:#a1aba0;--surface:#1a1f1b;--line:#2c332d;--accent:#c8e06a;--on-accent:#121708;--display:"Space Grotesk",Inter,system-ui,sans-serif;color-scheme:dark}
+@media (prefers-color-scheme:dark){
+:root:not([data-theme="light"]) body[data-view="upplevelser"]{--bg:#0f1d1d;--fg:#e6f3f1;--muted:#9bbbb7;--surface:#172b2a;--line:#284240;--accent:#5fd0c9;--on-accent:#062524}
+:root:not([data-theme="light"]) body[data-view="konsten"]{--bg:#17112a;--fg:#fbf3ee;--muted:#bfb2d0;--surface:#241a3d;--line:#3b2d5c;--accent:#ff8a5c;--on-accent:#2a0e03;--c2:#6ea4ff;--c3:#c08cf0;--c4:#ffd24a;--c5:#ff7fb5}}
+:root[data-theme="dark"] body[data-view="upplevelser"]{--bg:#0f1d1d;--fg:#e6f3f1;--muted:#9bbbb7;--surface:#172b2a;--line:#284240;--accent:#5fd0c9;--on-accent:#062524}
+:root[data-theme="dark"] body[data-view="konsten"]{--bg:#17112a;--fg:#fbf3ee;--muted:#bfb2d0;--surface:#241a3d;--line:#3b2d5c;--accent:#ff8a5c;--on-accent:#2a0e03;--c2:#6ea4ff;--c3:#c08cf0;--c4:#ffd24a;--c5:#ff7fb5}
+.stripe{display:flex;height:6px;max-width:220px}.stripe i{flex:1}.stripe i:nth-child(1){background:var(--accent)}.stripe i:nth-child(2){background:var(--c4)}.stripe i:nth-child(3){background:var(--c5)}.stripe i:nth-child(4){background:var(--c3)}.stripe i:nth-child(5){background:var(--c2)}
+body[data-view="konsten"] header{border-bottom:4px solid transparent;border-image:linear-gradient(90deg,var(--accent),var(--c4),var(--c5),var(--c3),var(--c2)) 1}
+body[data-view="konsten"] .facts b{color:var(--c3)}
+body[data-view="konsten"] .paint figure:nth-child(1) img{outline:4px solid var(--c2);outline-offset:-4px}
+body[data-view="konsten"] .paint figure:nth-child(2) img{outline:4px solid var(--c4);outline-offset:-4px}
+body[data-view="konsten"] .paint figure:nth-child(3) img{outline:4px solid var(--c3);outline-offset:-4px}
+body[data-view="matstudion"] h1,body[data-view="matstudion"] h2,body[data-view="matstudion"] h3{font-weight:500;letter-spacing:-.02em}
+body[data-view="matstudion"] h1{text-transform:uppercase;letter-spacing:-.01em}
+body[data-view="matstudion"] img,body[data-view="matstudion"] .btn,body[data-view="matstudion"] .band,body[data-view="matstudion"] .ph{border-radius:0}
+body[data-view="matstudion"] .eyebrow{letter-spacing:.22em}
+.menu{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:28px 40px}
+.menu>*{min-width:0}
+.menu h3{border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:6px}
+.mi{display:flex;justify-content:space-between;gap:16px;padding-block:7px;border-bottom:1px dashed var(--line)}
+.mi span:first-child{color:var(--fg)}.mi span:last-child{white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--accent);font-weight:500}
+.route{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;align-items:start}
+.route>*{min-width:0}
+.copy{font:inherit;cursor:pointer}
 </style>
 
 <div class="in">
 <header>
   <a class="brand" href="#hem">Konstladan i Tolg</a>
   <nav id="nav">
-    <a href="#hem">Hem</a><a href="#upplevelser">Upplevelser</a><a href="#konsten">Konsten</a><a href="#matstudion">Jonas matstudio</a>
+    <a href="#hem">Hem</a><a href="#upplevelser">Upplevelser</a><a href="#konsten">Konsten</a><a href="#matstudion">Jonas matstudio</a><a href="#hitta">Hitta hit</a>
   </nav>
 </header>
 
@@ -98,7 +126,7 @@ footer p{color:var(--muted)}
       <span class="eyebrow">Munkatorp, Tolg · 20 min från Växjö</span>
       <h1>Konst, mat och natur på samma gård.</h1>
       <p class="lead">En lada från början av 1900-talet som blivit ateljé och galleri, omgiven av en parkliknande trädgård. Här målar Emilia Linderholm och här lagar Jonas Danielsson mat med doft av Medelhavet.</p>
-      <div class="row"><a class="btn" href="#upplevelser">Boka en upplevelse</a><a class="btn alt" href="#kontakt">Hitta hit</a></div>
+      <div class="row"><a class="btn" href="#upplevelser">Boka en upplevelse</a><a class="btn alt" href="#hitta">Hitta hit</a></div>
     </div>
     <img src="bilder/skylt-konstladan.webp" alt="Handmålad svart skylt med pilar mot Konstladan, toalett och boulebana">
   </div>
@@ -178,6 +206,7 @@ footer p{color:var(--muted)}
   <div class="sec">
     <span class="eyebrow">Konsten</span>
     <h1>Emilia Linderholm</h1>
+    <div class="stripe"><i></i><i></i><i></i><i></i><i></i></div>
     <p class="lead">Emilias uttryck är färgstarkt och levande. Med sina kvinnogestalter vill hon väcka känslor hos betraktaren. Hon målar i olja på linneduk, formger glas, och sången och musiken genomsyrar skapandet.</p>
   </div>
   <div class="facts">
@@ -227,9 +256,47 @@ footer p{color:var(--muted)}
     </div>
   </section>
 
+  <section class="sec" id="meny">
+    <h2>Meny</h2>
+    <div class="menu">
+      <div><h3>Galetter</h3>
+        <div class="mi"><span>Salt galette <em class="tag">(innehåll fylls i)</em></span><span>159 kr</span></div>
+        <div class="mi"><span>Salt galette <em class="tag">(innehåll fylls i)</em></span><span>159 kr</span></div>
+        <div class="mi"><span>Söt galette <em class="tag">(innehåll fylls i)</em></span><span>159 kr</span></div></div>
+      <div><h3>Crêpe</h3>
+        <div class="mi"><span>Smör, socker, citron</span><span>80 kr</span></div>
+        <div class="mi"><span>Jordgubbar, lemon curd, choklad</span><span>120 kr</span></div>
+        <div class="mi"><span>Banan, jordgubbar, choklad</span><span>120 kr</span></div>
+        <div class="mi"><span>Fler sorter <em class="tag">(fylls i)</em></span><span>120 kr</span></div>
+        <div class="mi"><span>Lägg till en kula glass</span><span>25 kr</span></div></div>
+      <div><h3>Croissant</h3>
+        <div class="mi"><span>Med bärmousse</span><span>60 kr</span></div>
+        <div class="mi"><span>Med choklad</span><span>45 kr</span></div>
+        <div class="mi"><span>Med choklad och glass</span><span>65 kr</span></div>
+        <p class="muted" style="margin-top:10px">Allergi? Fråga oss. Vi smälter endast belgisk choklad.</p></div>
+    </div>
+    <p class="note">Utkast från krittavlan. Jonas kontrollerar rätter och priser innan sidan publiceras. Middag och lunch för grupper beställs via Jonas.</p>
+  </section>
+
   <section class="band"><h2>Boka mat</h2><p>Kontakta Jonas på <strong>070-668 98 76</strong> eller <strong>jonas.danielsson1@gmail.com</strong>.</p></section>
 </div>
 </main>
+
+<section class="route" id="hitta">
+  <div class="sec">
+    <h2>Hitta hit</h2>
+    <p><strong>Konstladan i Tolg</strong><br>Munkatorp Södergård 2<br>363 35 Tolg</p>
+    <p class="muted">Lilla byn Munkatorp ligger i Tolg, cirka 20 minuter med bil utanför Växjö. Elin Wägners Lilla Björka ligger en kvart bort, så ett besök går bra att kombinera.</p>
+  </div>
+  <div class="sec">
+    <div class="row">
+      <a class="btn" href="https://www.google.com/maps/search/?api=1&query=Munkatorp+S%C3%B6dergård+2+Tolg">Öppna i Google Maps</a>
+      <a class="btn alt" href="https://www.openstreetmap.org/search?query=Munkatorp%20S%C3%B6dergård%202%20Tolg">OpenStreetMap</a>
+    </div>
+    <div class="row"><button class="btn alt copy" id="copyaddr" type="button">Kopiera adressen</button><span class="note" id="copied" role="status"></span></div>
+    <p class="note">Kör-, parkerings- och kollektivinfo läggs till när vi fått den av Emilia och Jonas.</p>
+  </div>
+</section>
 
 <footer id="kontakt">
   <div><h3>Konstladan i Tolg</h3><p>Munkatorp Södergård 2<br>363 35 Tolg<br>20 minuter utanför Växjö</p></div>
@@ -244,16 +311,22 @@ footer p{color:var(--muted)}
   document.documentElement.classList.add("js");
   function show(){
     var h=(location.hash||"").replace("#","");
-    if(h==="kontakt"&&window.__cur)return;
-    if(h==="kontakt")h="hem";
+    if((h==="kontakt"||h==="hitta"||h==="meny")&&window.__cur)return;
+    if(h==="kontakt"||h==="hitta"||h==="meny")h="hem";
     if(views.indexOf(h)<0)h="hem";
-    window.__cur=h;
+    window.__cur=h;document.body.setAttribute("data-view",h);
     views.forEach(function(v){document.getElementById("v-"+v).classList.toggle("on",v===h)});
     document.querySelectorAll("#nav a").forEach(function(a){
       if(a.getAttribute("href")==="#"+h)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current")});
     if(!window.__first){window.__first=1}else{window.scrollTo(0,0)}
   }
   window.addEventListener("hashchange",show);show();
+  var b=document.getElementById("copyaddr");
+  if(b)b.addEventListener("click",function(){
+    var txt="Munkatorp Södergård 2, 363 35 Tolg",o=document.getElementById("copied");
+    function done(m){o.textContent=m}
+    try{navigator.clipboard.writeText(txt).then(function(){done("Kopierad")},function(){done(txt)})}catch(e){done(txt)}
+  });
 })();
 </script>
 
