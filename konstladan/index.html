@@ -183,6 +183,16 @@ footer{margin-top:16px;padding-block:28px 48px;display:grid;gap:24px}
 .foot h3{font-size:1rem;margin-bottom:6px}
 .foot p{color:var(--muted)}
 .note{font-size:.82rem;color:var(--muted)}
+
+/* Rutor med foto som bakgrund: alltid ljus text på mörk tonad bild */
+.photo{background:linear-gradient(180deg,rgba(18,10,16,.35) 0%,rgba(18,10,16,.78) 100%),var(--img) center/cover no-repeat;color:#fff;border-color:transparent;min-height:340px;align-content:end}
+.photo p,.photo .muted,.photo .list li{color:rgba(255,255,255,.9)}
+.photo h2,.photo h3{color:#fff}
+.photo .eyebrow,.photo .chip{color:#fff;border-color:rgba(255,255,255,.55);background:rgba(255,255,255,.08);backdrop-filter:blur(4px)}
+.photo .list li::before{border-color:#fff}.photo .list li::after{background:#fff}
+.photo.ring::after{border-color:rgba(255,255,255,.45)}
+.photo .btn.alt{color:#fff;border-color:rgba(255,255,255,.7)}
+.photo.tall{min-height:440px}
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -234,7 +244,7 @@ footer{margin-top:16px;padding-block:28px 48px;display:grid;gap:24px}
     </div>
   </section>
 
-  <section class="band ring">
+  <section class="band ring photo tall" style="--img:url(bilder/studion-skymning.webp)">
     <span class="eyebrow"><svg class="ico" style="width:16px;height:16px"><use href="#i-cal"/></svg>Aktuellt</span>
     <h2>Julöppet i Konstladan 5–6 december</h2>
     <p>Kom förbi galleriet och trädgården i adventstid. Emilia ställer också ut separat hos Tranåsbygdens konstförening 13–29 november. Följ @konstladan_i_tolg_ på Instagram för tider.</p>
@@ -279,7 +289,7 @@ footer{margin-top:16px;padding-block:28px 48px;display:grid;gap:24px}
     <div class="arch flip"><img src="bilder/utanfor-studion.webp" alt="Två män utanför matstudion, bredvid en handskriven meny på krittavla"></div>
   </section>
 
-  <section class="band ring">
+  <section class="band ring photo" style="--img:url(bilder/malning-7.webp);background-position:center 30%">
     <span class="chip">Heldag · minst 10 personer</span>
     <h2>Målarkurs i ateljén</h2>
     <p>Lämna vardagen för en hel dag i färgens tecken. Vi arbetar i akryl på duk och i akvarell, med enkla och tydliga uppgifter. Kursen passar både dig som vill testa och dig som vill vidare i ditt eget uttryck. Nya datum släpps snart.</p>
@@ -326,7 +336,7 @@ footer{margin-top:16px;padding-block:28px 48px;display:grid;gap:24px}
       </div>
     </div>
   </section>
-  <section class="band ring"><h2>Hitta ditt original</h2><p>Att köpa konst av en verksam konstnär gör att hon kan fortsätta skapa, och ger mer färg och harmoni hemma. Boka en privat visning i ateljén och galleriet.</p><a class="btn" href="#boka" data-pick="visning">Boka visning</a></section>
+  <section class="band ring photo tall" style="--img:url(bilder/malning-10.webp)"><h2>Hitta ditt original</h2><p>Att köpa konst av en verksam konstnär gör att hon kan fortsätta skapa, och ger mer färg och harmoni hemma. Boka en privat visning i ateljén och galleriet.</p><a class="btn" href="#boka" data-pick="visning">Boka visning</a></section>
 </div>
 
 <!-- MATSTUDION -->
@@ -370,9 +380,9 @@ footer{margin-top:16px;padding-block:28px 48px;display:grid;gap:24px}
     <p class="note">Utkast avläst från krittavlan. Jonas kontrollerar rätter och priser innan sidan publiceras.</p>
   </section>
 
-  <section class="split" style="align-items:start">
-    <div class="sec"><h2>Trädgården</h2><p>Över 250 planterade rosor, prunkande rabatter och ätbara grödor. Jonas odlar allt från blommor till den egna potatisen som till slut hamnar på tallriken, och det mesta är återbrukade växter.</p></div>
-    <div class="sec"><h2>Från scen till spis</h2><p>Jonas kommer från Braås och var musiker i 17 år, på turné och i tv och radio med några av Sveriges största artister. Tillbaka i Småland utbildade han sig till kock. Skapandet har varit den röda tråden hela vägen.</p></div>
+  <section class="split" style="align-items:stretch">
+    <div class="band photo tall" style="--img:url(bilder/rosor.webp)"><span class="eyebrow">Trädgården</span><h2>250 rosor och egen potatis</h2><p>Prunkande rabatter, ätbara grödor och mest återbrukade växter. Det Jonas odlar hamnar så småningom på tallriken.</p></div>
+    <div class="band photo tall" style="--img:url(bilder/studion-dagtid.webp)"><span class="eyebrow">Från scen till spis</span><h2>Musiker i 17 år, sedan kock</h2><p>Jonas kommer från Braås och turnerade med några av Sveriges största artister. Tillbaka i Småland utbildade han sig till kock. Skapandet har varit den röda tråden hela vägen.</p></div>
   </section>
 </div>
 
@@ -419,7 +429,7 @@ footer{margin-top:16px;padding-block:28px 48px;display:grid;gap:24px}
     <button class="btn alt" type="button" id="bookagain">Gör en ny förfrågan</button>
   </div>
 
-  <section class="band"><h2>Hellre ringa?</h2><p>Upplevelser och konst: Emilia, <strong>070-144 60 31</strong>, emilia@linderholm.se<br>Mat: Jonas, <strong>070-668 98 76</strong>, jonas.danielsson1@gmail.com</p></section>
+  <section class="band photo" style="--img:url(bilder/utanfor-studion.webp);background-position:center 25%"><h2>Hellre ringa?</h2><p>Upplevelser och konst: Emilia, <strong>070-144 60 31</strong>, emilia@linderholm.se<br>Mat: Jonas, <strong>070-668 98 76</strong>, jonas.danielsson1@gmail.com</p></section>
 </div>
 </main>
 
