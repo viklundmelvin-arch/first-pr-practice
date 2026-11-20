@@ -1,9 +1,9 @@
-name: Busslarm on GitHub Pages
+name: Busslarm and Konstladan on GitHub Pages
 
 on:
   push:
     branches: [master]
-    paths: ["busslarm/**", ".github/workflows/busslarm-pages.yml"]
+    paths: ["busslarm/**", "konstladan/**", ".github/workflows/busslarm-pages.yml"]
   workflow_dispatch:
 
 permissions:
@@ -28,6 +28,9 @@ jobs:
         run: |
           mkdir _site
           cp -r busslarm/index.html busslarm/app.js busslarm/rt.js busslarm/vendor busslarm/data _site/
+          # Konstladan is published under /konstladan/.
+          mkdir _site/konstladan
+          cp -r konstladan/index.html konstladan/bilder _site/konstladan/
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
