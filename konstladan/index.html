@@ -72,6 +72,7 @@ nav a[aria-current="page"]{color:var(--fg);border-bottom-color:var(--accent)}
 .facts span{color:var(--muted);font-size:.93rem}
 blockquote{margin:0;padding-left:18px;border-left:3px solid var(--accent);color:var(--muted);max-width:60ch}
 blockquote cite{display:block;font-style:normal;font-size:.88rem;margin-top:6px}
+.paint{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;align-items:start}.paint figure{margin:0}.paint img{width:100%;height:auto;border-radius:4px}
 .gal{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
 .gal img{width:100%;aspect-ratio:3/4;border-radius:4px}
 .tag{color:var(--muted);font-style:normal}
@@ -112,7 +113,7 @@ footer p{color:var(--muted)}
     <h2>Upptäck Konstladan</h2>
     <div class="cols">
       <article class="card"><img src="bilder/studion-dagtid.webp" alt="Matstudions container en solig dag med gäster utomhus på grusgården"><h3>Upplevelser och kurser</h3><p>Måla och skåla, målarkurs, bussbesök och mentorsprogram.</p><a href="#upplevelser">Se upplevelserna →</a></article>
-      <article class="card"><div class="ph" style="aspect-ratio:4/3"><span><b>Målning av Emilia</b>Bild kommer</span></div><h3>Emilia Linderholm</h3><p>Färgstarka kvinnogestalter i olja på linneduk, och glas.</p><a href="#konsten">Läs om konsten →</a></article>
+      <article class="card"><img src="bilder/malning-1.webp" alt="Målning av en kvinna i röd kjol och hatt med blommor" style="object-position:center 25%"><h3>Emilia Linderholm</h3><p>Färgstarka kvinnogestalter i olja på linneduk, och glas.</p><a href="#konsten">Läs om konsten →</a></article>
       <article class="card"><img src="bilder/desserter.webp" alt="Skålar med dessert uppradade på en bänk i köket"><h3>Jonas matstudio</h3><p>Generös och vällagad mat med inspiration från Frankrike och södra Europa.</p><a href="#matstudion">Läs om maten →</a></article>
     </div>
   </section>
@@ -186,13 +187,13 @@ footer p{color:var(--muted)}
   </div>
   <section class="sec">
     <h2>Målningar</h2>
-    <div class="cols" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">
-      <div class="ph"><span><b>Golden air blue dreams</b>100 × 150 cm<br>Bild kommer</span></div>
-      <div class="ph"><span><b>I det lilla händer det stora</b>Olja på duk, 50 × 70 cm<br>Bild kommer</span></div>
-      <div class="ph"><span><b>Titel</b>Bild kommer</span></div>
-      <div class="ph"><span><b>Titel</b>Bild kommer</span></div>
+    <div class="paint">
+      <figure><img src="bilder/malning-1.webp" alt="Målning av en kvinna i röd kjol och hatt med blommor, som lyfter ett glas, vid en näckrosdamm"></figure>
+      <figure><img src="bilder/malning-2.webp" alt="Målning av en kvinna i blå klänning mot en glödande orange bakgrund, bland maskrosor"></figure>
+      <figure><img src="bilder/malning-3.webp" alt="Målning av en kvinna i lila kjol mot blå bakgrund, med blommande kungsmynta framför"></figure>
+      <div class="ph"><span><b>Fler verk</b>Kommer</span></div>
     </div>
-    <p class="note">Platshållare. Emilias egna bilder läggs in här.</p>
+    <p class="note">Urval. Fler verk läggs in här.</p>
   </section>
   <section class="band"><h2>Boka en visning</h2><p>Du kan boka en visning i ateljén och konstladan om du letar efter ett originalverk. Kontakta Emilia på emilia@linderholm.se.</p></section>
 </div>
