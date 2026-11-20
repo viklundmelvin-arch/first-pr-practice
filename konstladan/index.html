@@ -193,6 +193,24 @@ footer{margin-top:16px;padding-block:28px 48px;display:grid;gap:24px}
 .photo.ring::after{border-color:rgba(255,255,255,.45)}
 .photo .btn.alt{color:#fff;border-color:rgba(255,255,255,.7)}
 .photo.tall{min-height:440px}
+
+/* Omslagsbild överst i flikar */
+.cover{min-height:clamp(380px,55vw,540px);gap:16px;padding:clamp(24px,5vw,56px)}
+.cover h1{color:#fff}.cover h1 em{color:#fff;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:6px}
+.cover .lead{color:rgba(255,255,255,.92);max-width:56ch}
+.cover .stripe{margin-block:2px}
+/* Mobil: bild först i delade hjältar, kompakt meny */
+@media (max-width:700px){
+  .hero .arch,.view>.split:first-child .arch{order:-1}
+  .arch img{max-height:420px}
+  .bar{border-radius:var(--r-lg);padding:10px 12px;flex-direction:column;align-items:stretch;gap:8px}
+  .brand{justify-content:center}
+  nav{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;justify-content:flex-start;gap:4px;padding-bottom:2px}
+  nav::-webkit-scrollbar{display:none}
+  .bar>*{min-width:0;max-width:100%}
+  .cover h1{font-size:clamp(1.9rem,8vw,4.1rem);overflow-wrap:break-word;hyphens:auto}
+  nav a{white-space:nowrap;padding:6px 12px}
+}
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -268,7 +286,7 @@ footer{margin-top:16px;padding-block:28px 48px;display:grid;gap:24px}
 
 <!-- UPPLEVELSER -->
 <div class="view" id="v-upplevelser">
-  <div class="head">
+  <div class="band photo cover" style="--img:url(bilder/studion-dagtid.webp)">
     <span class="eyebrow">Upplevelser</span>
     <h1>En dag med <em>färg</em>, mat och gemenskap</h1>
     <p class="lead">Vi skräddarsyr dagen efter er grupp. Ni målar i ateljén, äter Jonas mat och strövar i trädgården. Ingen förkunskap behövs, bara lust.</p>
@@ -308,7 +326,7 @@ footer{margin-top:16px;padding-block:28px 48px;display:grid;gap:24px}
 
 <!-- KONSTEN -->
 <div class="view" id="v-konsten">
-  <div class="head">
+  <div class="band photo cover" style="--img:url(bilder/malning-10.webp)">
     <span class="eyebrow">Konsten</span>
     <h1>Emilia Linderholm</h1>
     <div class="stripe"><i></i><i></i><i></i><i></i><i></i></div>
@@ -336,7 +354,7 @@ footer{margin-top:16px;padding-block:28px 48px;display:grid;gap:24px}
       </div>
     </div>
   </section>
-  <section class="band ring photo tall" style="--img:url(bilder/malning-10.webp)"><h2>Hitta ditt original</h2><p>Att köpa konst av en verksam konstnär gör att hon kan fortsätta skapa, och ger mer färg och harmoni hemma. Boka en privat visning i ateljén och galleriet.</p><a class="btn" href="#boka" data-pick="visning">Boka visning</a></section>
+  <section class="band ring photo tall" style="--img:url(bilder/malning-2.webp)"><h2>Hitta ditt original</h2><p>Att köpa konst av en verksam konstnär gör att hon kan fortsätta skapa, och ger mer färg och harmoni hemma. Boka en privat visning i ateljén och galleriet.</p><a class="btn" href="#boka" data-pick="visning">Boka visning</a></section>
 </div>
 
 <!-- MATSTUDION -->
@@ -388,7 +406,7 @@ footer{margin-top:16px;padding-block:28px 48px;display:grid;gap:24px}
 
 <!-- BOKA -->
 <div class="view" id="v-boka">
-  <div class="head">
+  <div class="band photo cover" style="--img:url(bilder/rosor.webp)">
     <span class="eyebrow">Boka</span>
     <h1>Skicka en <em>bokningsförfrågan</em></h1>
     <p class="lead">Välj vad ni vill göra, berätta lite om gruppen så återkommer vi med förslag och pris.</p>
