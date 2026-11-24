@@ -177,6 +177,19 @@ body[data-view="matstudion"] .lg-l{display:none}body[data-view="matstudion"] .lg
 .foot-logo{width:200px;height:auto;margin-bottom:14px}
 @media (max-width:600px){.brand .lg{height:48px}}
 .top .cap.hemcap{flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:4px;padding-block:8px 0}.hemcap .hand{transform:rotate(-2deg);font-size:1.9rem}
+
+/* Rullande bildband */
+.marquee{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);padding-block:14px}
+.marquee .track{display:flex;gap:22px;width:max-content;animation:roll var(--dur,50s) linear infinite}
+.marquee.rev .track{animation-direction:reverse}
+.marquee:hover .track,.marquee:focus-within .track{animation-play-state:paused}
+@keyframes roll{to{transform:translateX(calc(-50% - 11px))}}
+.marquee .pins{display:flex;grid-template-columns:none;padding-block:10px}
+.marquee .pins figure{width:230px;flex:none}
+.marquee .paintings img{height:300px;width:auto;background:var(--paper);padding:10px;box-shadow:0 1px 2px rgba(0,0,0,.06),0 12px 26px -16px rgba(0,0,0,.35)}
+.marquee .photos img{height:240px;width:auto;border-radius:3px}
+@media (max-width:600px){.marquee .paintings img{height:220px}.marquee .photos img{height:180px}.marquee .pins figure{width:180px}}
+@media (prefers-reduced-motion:reduce){.marquee{overflow-x:auto;-webkit-mask-image:none;mask-image:none}.marquee .track{animation:none}}
 </style>
 
 <div class="in">
@@ -236,11 +249,16 @@ body[data-view="matstudion"] .lg-l{display:none}body[data-view="matstudion"] .lg
 
   <section style="display:grid;gap:24px">
     <h2>Från gården</h2>
-    <div class="pins">
-      <figure><img src="bilder/studion-skymning.webp" alt="Matstudion i skymningen"><figcaption>en sommarkväll</figcaption></figure>
-      <figure><img src="bilder/rosor.webp" alt="Rosa rosor"><figcaption>några av rosorna</figcaption></figure>
-      <figure><img src="bilder/croissant.webp" alt="Grillad croissant med sallad och prästkragar"><figcaption>från köket</figcaption></figure>
-      <figure><img src="bilder/menytavla.webp" alt="Krittavla med meny på containerväggen"><figcaption>dagens tavla</figcaption></figure>
+    <div class="marquee" style="--dur:55s">
+      <div class="track pins">
+        <figure><img src="bilder/studion-skymning.webp" alt="Matstudion i skymningen"><figcaption>en sommarkväll</figcaption></figure>
+        <figure><img src="bilder/rosor.webp" alt="Rosa rosor"><figcaption>några av rosorna</figcaption></figure>
+        <figure><img src="bilder/croissant.webp" alt="Grillad croissant med sallad och prästkragar"><figcaption>från köket</figcaption></figure>
+        <figure><img src="bilder/menytavla.webp" alt="Krittavla med meny på containerväggen"><figcaption>dagens tavla</figcaption></figure>
+        <figure><img src="bilder/studion-dagtid.webp" alt="Gäster på gården en solig dag"><figcaption>solig lördag</figcaption></figure>
+        <figure><img src="bilder/desserter.webp" alt="Desserter i skålar i köket"><figcaption>snart dags för efterrätt</figcaption></figure>
+        <figure><img src="bilder/skylt-konstladan.webp" alt="Skylten mot Konstladan"><figcaption>hitåt!</figcaption></figure>
+      </div>
     </div>
   </section>
 </div>
@@ -314,6 +332,12 @@ body[data-view="matstudion"] .lg-l{display:none}body[data-view="matstudion"] .lg
     </dl>
   </section>
 
+  <div class="marquee rev" style="--dur:70s">
+    <div class="track paintings">
+      <img src="bilder/malning-1.webp" alt="Kvinna i röd kjol och hatt"><img src="bilder/malning-7.webp" alt="Kvinna i turkos bland gräs"><img src="bilder/malning-2.webp" alt="Kvinna i blått mot orange"><img src="bilder/malning-9.webp" alt="Familj i rött och blått"><img src="bilder/malning-3.webp" alt="Kvinna i lila kjol"><img src="bilder/malning-8.webp" alt="Kvinna i rött bakifrån"><img src="bilder/malning-6.webp" alt="Dansande kvinna i rött"><img src="bilder/malning-10.webp" alt="Kvinna vid vatten"><img src="bilder/malning-4.webp" alt="Kvinna med blomsterhatt"><img src="bilder/malning-5.webp" alt="Två dansande kvinnor">
+    </div>
+  </div>
+
   <section style="display:grid;gap:24px">
     <h2>Ur ateljén</h2>
     <div class="hang">
@@ -351,6 +375,12 @@ body[data-view="matstudion"] .lg-l{display:none}body[data-view="matstudion"] .lg
       <p class="small">Trädgården har över 250 rosor. Jonas visar gärna runt.</p>
     </div>
   </section>
+
+  <div class="marquee" style="--dur:45s">
+    <div class="track photos">
+      <img src="bilder/desserter.webp" alt="Desserter i köket"><img src="bilder/croissant.webp" alt="Grillad croissant"><img src="bilder/studion-dagtid.webp" alt="Gården en solig dag"><img src="bilder/menytavla.webp" alt="Krittavlan"><img src="bilder/studion-skymning.webp" alt="Matstudion i skymningen"><img src="bilder/rosor.webp" alt="Rosor i trädgården">
+    </div>
+  </div>
 
   <section class="menu" id="meny">
     <header><p class="hand">från krittavlan</p><h2>Sommarmeny</h2></header>
@@ -463,6 +493,9 @@ body[data-view="matstudion"] .lg-l{display:none}body[data-view="matstudion"] .lg
     window.__first=1;
   }
   window.addEventListener("hashchange",show);show();
+  document.querySelectorAll(".marquee .track").forEach(function(tr){
+    Array.prototype.slice.call(tr.children).forEach(function(n){var c=n.cloneNode(true);c.setAttribute("aria-hidden","true");c.querySelectorAll("img").forEach(function(i){i.alt=""});tr.appendChild(c)});
+  });
   document.addEventListener("click",function(e){
     var a=e.target.closest("[data-pick]");if(!a)return;
     var r=document.getElementById("o-"+a.getAttribute("data-pick"));if(r)r.checked=true;
