@@ -190,6 +190,8 @@ body[data-view="matstudion"] .lg-l{display:none}body[data-view="matstudion"] .lg
 .marquee .photos img{height:240px;width:auto;border-radius:3px}
 @media (max-width:600px){.marquee .paintings img{height:220px}.marquee .photos img{height:180px}.marquee .pins figure{width:180px}}
 @media (prefers-reduced-motion:reduce){.marquee{overflow-x:auto;-webkit-mask-image:none;mask-image:none}.marquee .track{animation:none}}
+.strip-top{margin-top:calc(-1*clamp(32px,5vw,72px));min-width:0}
+.view>*{min-width:0}.marquee{max-width:100%;min-width:0}
 </style>
 
 <div class="in">
@@ -205,6 +207,20 @@ body[data-view="matstudion"] .lg-l{display:none}body[data-view="matstudion"] .lg
     <div class="cap hemcap">
       <h1 class="logo-h1"><span class="sr">Konstladan i Tolg</span><img class="lg lg-l" src="logo/akvarell/konstladan-akvarell-web.png" alt=""><img class="lg lg-d" src="logo/akvarell/konstladan-akvarell-ljus-web.png" alt=""></h1>
       <p class="hand" style="transform:rotate(-2deg)">konst, mat &amp; rosor i Munkatorp</p>
+    </div>
+  </section>
+
+  <section class="strip-top">
+    <div class="marquee" style="--dur:55s">
+      <div class="track pins">
+        <figure><img src="bilder/studion-skymning.webp" alt="Matstudion i skymningen"><figcaption>en sommarkväll</figcaption></figure>
+        <figure><img src="bilder/rosor.webp" alt="Rosa rosor"><figcaption>några av rosorna</figcaption></figure>
+        <figure><img src="bilder/croissant.webp" alt="Grillad croissant med sallad och prästkragar"><figcaption>från köket</figcaption></figure>
+        <figure><img src="bilder/menytavla.webp" alt="Krittavla med meny på containerväggen"><figcaption>dagens tavla</figcaption></figure>
+        <figure><img src="bilder/studion-dagtid.webp" alt="Gäster på gården en solig dag"><figcaption>solig lördag</figcaption></figure>
+        <figure><img src="bilder/desserter.webp" alt="Desserter i skålar i köket"><figcaption>snart dags för efterrätt</figcaption></figure>
+        <figure><img src="bilder/skylt-konstladan.webp" alt="Skylten mot Konstladan"><figcaption>hitåt!</figcaption></figure>
+      </div>
     </div>
   </section>
 
@@ -247,20 +263,6 @@ body[data-view="matstudion"] .lg-l{display:none}body[data-view="matstudion"] .lg
     <blockquote style="align-self:center"><p>”Det här är det perfekta besöksmålet på en kulturresa.”</p><cite>Linnéa Sallay, guide för ReseSkaparna</cite></blockquote>
   </section>
 
-  <section style="display:grid;gap:24px">
-    <h2>Från gården</h2>
-    <div class="marquee" style="--dur:55s">
-      <div class="track pins">
-        <figure><img src="bilder/studion-skymning.webp" alt="Matstudion i skymningen"><figcaption>en sommarkväll</figcaption></figure>
-        <figure><img src="bilder/rosor.webp" alt="Rosa rosor"><figcaption>några av rosorna</figcaption></figure>
-        <figure><img src="bilder/croissant.webp" alt="Grillad croissant med sallad och prästkragar"><figcaption>från köket</figcaption></figure>
-        <figure><img src="bilder/menytavla.webp" alt="Krittavla med meny på containerväggen"><figcaption>dagens tavla</figcaption></figure>
-        <figure><img src="bilder/studion-dagtid.webp" alt="Gäster på gården en solig dag"><figcaption>solig lördag</figcaption></figure>
-        <figure><img src="bilder/desserter.webp" alt="Desserter i skålar i köket"><figcaption>snart dags för efterrätt</figcaption></figure>
-        <figure><img src="bilder/skylt-konstladan.webp" alt="Skylten mot Konstladan"><figcaption>hitåt!</figcaption></figure>
-      </div>
-    </div>
-  </section>
 </div>
 
 <!-- UPPLEVELSER -->
